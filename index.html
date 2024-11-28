@@ -1,4 +1,15 @@
 <div class="container">
+    <div class="language-selector">
+        <select onchange="showSection(this.value)">
+            <option value="english">English</option>
+            <option value="chinese">中文</option>
+            <option value="spanish">Español</option>
+            <option value="russian">Русский</option>
+            <option value="arabic">العربية</option>
+            <option value="hebrew">עברית</option>
+        </select>
+    </div>
+
     <div class="section english">
         <h1>Thank you for choosing our Neck Blocks game!</h1>
         <p class="subtitle">Use it to free your neck!</p>
@@ -11,6 +22,20 @@
         </div>
         
         <p class="thank-you">Thank you!</p>
+
+        <div class="story">
+            <h2>Developer's Story</h2>
+            <p>I previously worked in smart hardware and AI at large companies, and now I'm venturing into AI-related entrepreneurship.</p>
+            <p>Two years ago, during a routine physical examination, my wife was diagnosed with thyroid nodules. This year, after a biopsy, we found it was a malignant tumor, so she underwent surgery to remove the left thyroid. The surgery went well, but it was quite a long process. Going forward, she needs to be careful with her diet—for example, limiting foods like kelp and cruciferous vegetables.</p>
+            <p>This inspired me to create an application (initially a diet control app, but I found online spreadsheets could solve that problem) to help her recover from neck stiffness. Knowing she loves match-3 games and I love Tetris, and after seeing an app on PH that reminds you about neck bending time using AirPods, I had an aha moment!</p>
+            <p>So I modified a blocks project and added the following features:</p>
+            <ul>
+                <li>Support for playing games through head movement detection with AirPods (tilt up to rotate blocks, tilt down to accelerate block falling, left and right movements are self-explanatory)</li>
+                <li>Support for match-3 mode (wanted both features, that's just how it is; originally wanted to add vegetable and fruit textures, but that'll have to come later)</li>
+                <li>Turned off some operation sound effects because I prefer using headphones with noise cancellation, either without playing anything or with soft music or yoga audio</li>
+            </ul>
+            <p>This also inspired me to develop a future adventure game using spatial audio and AirPods head control—essentially, a game you play using only your ears and head movements, not your eyes. If you're interested in this concept, please reach out to discuss and explore together!</p>
+        </div>
     </div>
 
     <hr class="divider">
@@ -27,62 +52,696 @@
         </div>
         
         <p class="thank-you">再次感谢！</p>
+
+        <div class="story">
+            <h2>开发者故事</h2>
+            <p>我曾在大型公司从事智能硬件和人工智能领域的工作，现在正在涉足与人工智能相关的创业。</p>
+            <p>两年前，在一次例行体检中，我妻子被诊断出患有甲状腺结节。今年，经过活检，我们发现这是一个恶性肿瘤，于是她接受了手术，切除了左侧甲状腺。手术很顺利，但这是一个相当漫长的过程。今后，她需要仔细注意饮食——例如，限制海带和十字花科蔬菜等食物。</p>
+            <p>这启发我创建了一个应用程序（最早是饮食控制的 APP，但我发现在线表格就能解决该问题），来帮助她恢复僵硬的脖子，想到她喜欢消消乐，我喜欢俄罗斯方块，然后看到 PH 上有个通过 Airpods 来提醒脖子弯曲时间的 APP，灵光一闪，啊哈！</p>
+            <p>于是找了一个方块项目进行修改，增加了以下功能：</p>
+            <ul>
+                <li>支持通过 AirPods 来检测头部动作来进行游戏（抬头为旋转方块，低头加速方块下落，左右就不用说了）</li>
+                <li>支持消消乐模式（既要又要，就是要这样，本来还想加上蔬菜水果的贴图，只能后续了）</li>
+                <li>把一些操作的音效关闭了，因为我喜欢耳机就开减噪，不播放东西，或者播放柔和一些轻音乐或者瑜伽音频</li>
+            </ul>
+            <p>这也启发我后续会去做一款空间音频实现声音或者空间的感知定位结合 AirPods 头部控制来实现的冒险游戏，简而言之，就是一款不使用眼睛，只使用耳朵和头部来玩的游戏。如果您对这个概念感兴趣，请联系我，我们可以一起讨论和探索！</p>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section spanish">
+        <h1>¡Gracias por elegir nuestro juego Neck Blocks!</h1>
+        <p class="subtitle">¡Úsalo para liberar tu cuello!</p>
+        
+        <p class="message">Si encuentra algún problema con nuestros productos, contáctenos por correo electrónico y estaremos encantados de ayudarle.</p>
+        
+        <div class="contact">
+            <strong>Correo electrónico:</strong> 
+            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
+        </div>
+        
+        <p class="thank-you">¡Gracias!</p>
+
+        <div class="story">
+            <h2>Historia del Desarrollador</h2>
+            <p>Anteriormente trabajé en hardware inteligente e IA en grandes empresas, y ahora me estoy aventurando en el emprendimiento relacionado con la IA.</p>
+            <p>Hace dos años, durante un examen físico de rutina, a mi esposa le diagnosticaron nódulos tiroideos. Este año, después de una biopsia, descubrimos que era un tumor maligno, por lo que se sometió a una cirugía para extirpar el tiroides izquierdo. La cirugía salió bien, pero fue un proceso bastante largo. En adelante, debe tener cuidado con su dieta, por ejemplo, limitando alimentos como las algas y las verduras crucíferas.</p>
+            <p>Esto me inspiró a crear una aplicación para ayudarla a recuperarse de la rigidez del cuello. Sabiendo que a ella le encantan los juegos de combinar y a mí me gusta el Tetris, y después de ver una aplicación que te recuerda el tiempo de flexión del cuello usando AirPods, ¡tuve un momento eureka!</p>
+            <p>Características principales:</p>
+            <ul>
+                <li>Soporte para jugar mediante la detección de movimientos de cabeza con AirPods</li>
+                <li>Soporte para modo de combinación</li>
+                <li>Efectos de sonido opcionales con cancelación de ruido</li>
+            </ul>
+            <p>Si está interesado en este concepto, ¡contáctenos para discutir y explorar juntos!</p>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section russian">
+        <h1>Спасибо, что выбрали нашу игру Neck Blocks!</h1>
+        <p class="subtitle">Используйте её, чтобы освободить свою шею!</p>
+        
+        <p class="message">Если у вас возникнут проблемы с нашими продуктами, пожалуйста, свяжитесь с нами по электронной почте, и мы будем рады вам помочь!</p>
+        
+        <div class="contact">
+            <strong>Электронная почта:</strong> 
+            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
+        </div>
+        
+        <p class="thank-you">Спасибо!</p>
+
+        <div class="story">
+            <h2>История разработчика</h2>
+            <p>Ранее я работал в крупных компаниях в сфере умного оборудования и ИИ, а сейчас занимаюсь предпринимательством в сфере ИИ.</p>
+            <p>Два года назад во время планового медосмотра у моей жены обнаружили узлы в щитовидной железе. В этом году после биопсии выяснилось, что это злокачественная опухоль, и ей сделали операцию по удалению левой доли щитовидной железы. Операция прошла успешно, но это был довольно длительный процесс. Теперь ей нужно внимательно следить за питанием, например, ограничивать употребление морской капусты и крестоцветных овощей.</p>
+            <p>Это вдохновило меня на создание приложения для помощи в восстановлении подвижности шеи. Зная, что она любит игры-три-в-ряд, а я люблю Тетрис, и увидев приложение, которое напоминает о времени сгибания шеи с помощью AirPods, у меня появилась идея!</p>
+            <p>Основные функции:</p>
+            <ul>
+                <li>Управление с помощью движений головы через AirPods</li>
+                <li>Режим три-в-ряд</li>
+                <li>Опциональные звуковые эффекты с шумоподавлением</li>
+            </ul>
+            <p>Если вас заинтересовала эта концепция, свяжитесь с нами для обсуждения и совместного исследования!</p>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section arabic" dir="rtl">
+        <h1>!Neck Blocks شكراً لاختياركم لعبتنا</h1>
+        <p class="subtitle">!استخدمها لتحرير رقبتك</p>
+        
+        <p class="message">إذا واجهت أي مشاكل مع منتجاتنا، يرجى التواصل معنا عبر البريد الإلكتروني وسنكون سعداء بمساعدتك</p>
+        
+        <div class="contact">
+            <strong>:البريد الإلكتروني</strong> 
+            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
+        </div>
+        
+        <p class="thank-you">!شكراً لكم</p>
+
+        <div class="story">
+            <h2>قصة المطور</h2>
+            <p>عملت سابقاً في مجال الأجهزة الذكية والذكاء الاصطناعي في شركات كبرى، والآن أخوض مجال ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
+            <p>قبل عامين، خلال فحص روتيني، تم تشخيص زوجتي بعقد في الغدة الدرقية. هذا العام، بعد الخزعة، اكتشفنا أنه ورم خبيث، لذا خضعت لعملية لإزالة الغدة الدرقية اليسرى. نجحت العملية، لكنها كانت عملية طويلة. من الآن فصاعداً، عليها الانتباه لنظامها الغذائي.</p>
+            <p>:الميزات الرئيسية</p>
+            <ul>
+                <li>AirPods دعم اللعب من خلال اكتشاف حركة الرأس باستخدام</li>
+                <li>دعم وضع المطابقة</li>
+                <li>مؤثرات صوتية اختيارية مع إلغاء الضوضاء</li>
+            </ul>
+            <p>!إذا كنت مهتماً بهذا المفهوم، تواصل معنا للمناقشة والاستكشاف معاً</p>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section hebrew" dir="rtl">
+        <h1>!Neck Blocks תודה שבחרתם במשחק</h1>
+        <p class="subtitle">!השתמשו בו כדי לשחרר את הצוואר שלכם</p>
+        
+        <p class="message">אם נתקלתם בבעיות עם המוצרים שלנו, אנא צרו איתנו קשר באמצעות דואר אלקטרוני ונשמח לעזור</p>
+        
+        <div class="contact">
+            <strong>:דואר אלקטרוני</strong> 
+            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
+        </div>
+        
+        <p class="thank-you">!תודה</p>
+
+        <div class="story">
+            <h2>סיפור המפתח</h2>
+            <p>בעבר עבדתי בחברות גדולות בתחום החומרה החכמה והבינה המלאכותית, וכעת אני עוסק ביזמות בתחום הבינה המלאכותית.</p>
+            <p>לפני שנתיים, במהלך בדיקה שגרתית, אובחנה אשתי עם קשריות בבלוטת התריס. השנה, לאחר ביופסיה, גילינו שזה גידול ממאיר, ולכן היא עברה ניתוח להסרת בלוטת התריס השמאלית.</p>
+            <p>:תכונות עיקריות</p>
+            <ul>
+                <li>AirPods מיכה במשחק באמצעות זיהוי תנועות ראש עם</li>
+                <li>תמיכה במצב התאמה</li>
+                <li>אפקטים קוליים אופציונליים עם ביטול רעשים</li>
+            </ul>
+            <p>!אם אתם מתעניינים ברעיון הזה, צרו איתנו קשר כדי לדון ולחקור יחד</p>
+        </div>
     </div>
 </div>
 
 <style>
-.container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    font-family: Arial, sans-serif;
+/* 重置默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    background-color: #ffffff;
+    color: #1d1d1f;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* 语言选择器样式 */
+.language-selector {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    margin-bottom: 3rem;
+    text-align: right;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.language-selector select {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #f5f5f7;
+    color: #1d1d1f;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.65rem auto;
+    transition: all 0.3s ease;
+}
+
+.language-selector select:hover {
+    background-color: #e8e8ed;
+}
+
+/* 章节样式 */
 .section {
-    margin: 2rem 0;
+    margin: 4rem 0;
+    opacity: 0;
+    animation: slideUp 0.8s ease-out forwards;
 }
 
 h1 {
-    color: #2c3e50;
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1d1d1f;
+    margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
 .subtitle {
-    color: #3498db;
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #86868b;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
 }
 
 .message {
+    font-size: 1.125rem;
+    color: #1d1d1f;
     line-height: 1.6;
-    color: #34495e;
+    margin-bottom: 2rem;
 }
 
 .contact {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 5px;
-    margin: 1rem 0;
+    background: #f5f5f7;
+    padding: 2.5rem;
+    border-radius: 18px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.contact strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #1d1d1f;
+    margin-bottom: 0.25rem;
 }
 
 .contact a {
-    color: #3498db;
+    display: inline-block;
+    color: #0066cc;
     text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: rgba(0,102,204,0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .contact a:hover {
-    text-decoration: underline;
+    color: #0044aa;
+    background: rgba(0,102,204,0.15);
+    transform: translateY(-1px);
 }
 
 .thank-you {
-    font-style: italic;
-    color: #7f8c8d;
+    font-size: 1.5rem;
+    color: #1d1d1f;
+    margin: 3rem 0;
+    font-weight: 600;
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(to right, rgba(0,102,204,0.1), rgba(0,102,204,0.05));
+    border-radius: 16px;
+    transform: scale(1);
+    transition: all 0.3s ease;
+}
+
+.thank-you:hover {
+    transform: scale(1.02);
+    background: linear-gradient(to right, rgba(0,102,204,0.15), rgba(0,102,204,0.1));
 }
 
 .divider {
     border: none;
-    border-top: 2px solid #eee;
-    margin: 2rem 0;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 50%, transparent);
+    margin: 4rem 0;
+}
+
+/* 故事部分样式 */
+.story {
+    background: #f5f5f7;
+    padding: 3rem;
+    border-radius: 24px;
+    margin: 3rem 0;
+    transition: all 0.3s ease;
+}
+
+.story:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.story h2 {
+    font-size: 2rem;
+    color: #1d1d1f;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.story p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #1d1d1f;
+    margin-bottom: 1.5rem;
+}
+
+.story ul {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.story li {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #1d1d1f;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.story li::before {
+    content: "•";
+    color: #0066cc;
+    position: absolute;
+    left: -1.5rem;
+}
+
+/* RTL 语言支持 */
+[dir="rtl"] {
+    text-align: right;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro AR", "SF Pro Gulf", "SF Arabic", Arial, sans-serif;
+}
+
+[dir="rtl"] .story li::before {
+    right: -1.5rem;
+    left: auto;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .story {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1.25rem;
+    }
+
+    .story {
+        padding: 1.5rem;
+    }
+
+    .story h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000000;
+        color: #f5f5f7;
+    }
+
+    .language-selector {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .language-selector select {
+        background-color: #1d1d1f;
+        color: #f5f5f7;
+    }
+
+    h1, .story h2 {
+        color: #f5f5f7;
+    }
+
+    .contact, .story {
+        background: #1d1d1f;
+    }
+
+    .message, .story p, .story li {
+        color: #f5f5f7;
+    }
+
+    .divider {
+        background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 50%, transparent);
+    }
+
+    .contact {
+        background: #1d1d1f;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .contact:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .contact strong {
+        color: #f5f5f7;
+    }
+
+    .contact a {
+        background: rgba(0,102,204,0.2);
+    }
+
+    .contact a:hover {
+        background: rgba(0,102,204,0.3);
+    }
+
+    .thank-you {
+        color: #f5f5f7;
+        background: linear-gradient(to right, rgba(0,102,204,0.2), rgba(0,102,204,0.1));
+    }
+
+    .thank-you:hover {
+        background: linear-gradient(to right, rgba(0,102,204,0.25), rgba(0,102,204,0.15));
+    }
+}
+
+/* 英语样式优化 - 简洁现代 */
+.english {
+    --heading-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.english h1 {
+    font-family: var(--heading-font);
+    letter-spacing: -0.02em;
+}
+
+/* 中文样式优化 - 优雅大气 */
+.chinese {
+    --heading-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
+    --body-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: 0.05em;
+}
+
+.chinese h1 {
+    font-family: var(--heading-font);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+.chinese .story {
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+}
+
+/* 西班牙语样式优化 - 热情活力 */
+.spanish {
+    --heading-font: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    --body-font: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.spanish h1 {
+    color: #1d1d1f;
+    font-weight: 700;
+}
+
+.spanish .thank-you {
+    background: linear-gradient(135deg, rgba(255,69,0,0.1), rgba(255,140,0,0.05));
+}
+
+/* 俄语样式优化 - 庄重大方 */
+.russian {
+    --heading-font: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    --body-font: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.russian h1 {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.russian .story {
+    line-height: 1.7;
+}
+
+/* 阿拉伯语样式优化 - 优雅流畅 */
+.arabic {
+    --heading-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
+    --body-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
+    line-height: 1.8;
+}
+
+.arabic h1 {
+    font-family: var(--heading-font);
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+.arabic .story {
+    line-height: 1.9;
+}
+
+/* 希伯来语样式优化 - 简约现代 */
+.hebrew {
+    --heading-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
+    --body-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
+    line-height: 1.7;
+}
+
+.hebrew h1 {
+    font-family: var(--heading-font);
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+/* 为每种语言应用基础字体设置 */
+.section {
+    font-family: var(--body-font);
+}
+
+.section h1,
+.section h2 {
+    font-family: var(--heading-font);
+}
+
+/* 深色模式下的文化适配 */
+@media (prefers-color-scheme: dark) {
+    .spanish .thank-you {
+        background: linear-gradient(135deg, rgba(255,69,0,0.2), rgba(255,140,0,0.1));
+    }
+
+    .chinese .story {
+        background: rgba(29, 29, 31, 0.95);
+    }
+
+    .arabic .story,
+    .hebrew .story {
+        background: rgba(29, 29, 31, 0.9);
+    }
+}
+
+/* RTL 语言的特殊处理 */
+[dir="rtl"] .story li::before {
+    right: -1.5rem;
+    left: auto;
+}
+
+[dir="rtl"] .contact {
+    text-align: right;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .chinese h1 {
+        letter-spacing: 0.05em;
+    }
+
+    .arabic,
+    .hebrew {
+        line-height: 1.6;
+    }
+}
+
+/* 动画优化 */
+.section {
+    --animation-duration: 0.8s;
+    --animation-timing: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.english,
+.chinese {
+    animation-duration: var(--animation-duration);
+    animation-timing-function: var(--animation-timing);
+}
+
+.spanish,
+.russian {
+    animation-duration: calc(var(--animation-duration) * 1.1);
+}
+
+.arabic,
+.hebrew {
+    animation-duration: calc(var(--animation-duration) * 1.2);
+}
+
+/* 交互效果优化 */
+.section {
+    transition: opacity 0.3s ease;
+}
+
+.section:hover .thank-you {
+    transform: scale(1.02);
+    transition: transform 0.3s var(--animation-timing);
+}
+
+/* 打印样式优化 */
+@media print {
+    .section {
+        animation: none;
+        opacity: 1;
+    }
+
+    .story {
+        break-inside: avoid;
+    }
 }
 </style>
+
+<script>
+function showSection(lang) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        section.style.display = section.classList.contains(lang) ? 'block' : 'none';
+    });
+    document.querySelector('.language-selector select').value = lang;
+}
+
+function getBrowserLanguage() {
+    const browserLang = navigator.language || navigator.userLanguage;
+    const lang = browserLang.toLowerCase().split('-')[0];
+    
+    const languageMap = {
+        'en': 'english',
+        'zh': 'chinese',
+        'es': 'spanish',
+        'ru': 'russian',
+        'ar': 'arabic',
+        'he': 'hebrew'
+    };
+
+    return languageMap[lang] || 'english';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const defaultLang = getBrowserLanguage();
+    showSection(defaultLang);
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    if (langParam) {
+        showSection(langParam);
+    }
+});
+
+document.querySelector('.language-selector select').addEventListener('change', function(e) {
+    const lang = e.target.value;
+    showSection(lang);
+    const url = new URL(window.location);
+    url.searchParams.set('lang', lang);
+    window.history.pushState({}, '', url);
+});
+</script>

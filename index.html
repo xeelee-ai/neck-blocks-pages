@@ -1,379 +1,136 @@
+<style>
+/* Thank you 心形动画样式 */
+.thank-you {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.thank-you::after {
+    content: "❤️";
+    position: absolute;
+    opacity: 0;
+    font-size: 1.5em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.thank-you:hover {
+    transform: scale(1.02);
+}
+
+.thank-you:hover::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: heartBeat 1.5s infinite;
+}
+
+@keyframes heartBeat {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    14% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+    28% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    42% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -150%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* RTL 语言的心形位置调整 */
+[dir="rtl"] .thank-you::after {
+    left: auto;
+    right: 50%;
+    transform: translate(50%, -50%) scale(0.5);
+}
+
+[dir="rtl"] .thank-you:hover::after {
+    transform: translate(50%, -50%) scale(1);
+}
+</style>
+
+<script>
+// Thank you 心形点击效果
+document.addEventListener('DOMContentLoaded', function() {
+    const thankYous = document.querySelectorAll('.thank-you');
+    
+    thankYous.forEach(thank => {
+        thank.addEventListener('click', function(e) {
+            const heart = document.createElement('span');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'absolute';
+            heart.style.left = (e.clientX - this.getBoundingClientRect().left) + 'px';
+            heart.style.top = (e.clientY - this.getBoundingClientRect().top) + 'px';
+            heart.style.pointerEvents = 'none';
+            heart.style.animation = 'floatHeart 1s ease-out forwards';
+            this.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 1000);
+        });
+    });
+});
+</script>
+
+<div class="tetris-background"></div>
+
 <div class="container">
     <div class="language-selector">
         <select onchange="showSection(this.value)" id="languageSelect">
-            <!-- 英语（约20亿） -->
+            <!-- 英语 -->
             <option value="english" data-names='{
-                "english": "English (US)",
-                "english-gb": "English (US)",
-                "chinese": "英语（美国）",
-                "spanish": "Inglés (EE.UU.)",
-                "spanish-mx": "Inglés (EE.UU.)",
-                "spanish-ar": "Inglés (EE.UU.)",
-                "russian": "Английский (США)",
-                "arabic": "الإنجليزية (الولايات المتحدة)",
-                "hebrew": "אנגלית (ארה״ב)",
-                "esperanto": "Angla (Usono)",
-                "lojban": "glibau merko",
-                "japanese": "英語（米国）",
-                "korean": "영어 (미국)",
-                "french-ca": "Anglais (États-Unis)",
-                "hindi": "अंग्रेज़ी (यूएस)",
-                "portuguese": "Inglês (EUA)",
-                "sanskrit": "आङ्ग्लभाषा (अमेरिका)"
-            }'>English (US)</option>
-            <option value="english-gb" data-names='{
-                "english": "English (UK)",
-                "english-gb": "English (UK)",
-                "chinese": "英语（英国）",
-                "spanish": "Inglés (Reino Unido)",
-                "spanish-mx": "Inglés (Reino Unido)",
-                "spanish-ar": "Inglés (Reino Unido)",
-                "russian": "Английский (Великобритания)",
-                "arabic": "الإنجليزية (المملكة المتحدة)",
-                "hebrew": "אנגלית (בריטניה)",
-                "esperanto": "Angla (Britio)",
-                "lojban": "glibau glico",
-                "japanese": "英語（イギリス）",
-                "korean": "영어 (영국)",
-                "french-ca": "Anglais (Royaume-Uni)",
-                "hindi": "अंग्रेज़ी (यूके)",
-                "portuguese": "Inglês (Reino Unido)",
-                "sanskrit": "आङ्ग्लभाषा (ब्रिटेन)"
-            }'>English (UK)</option>
+                "english": "English",
+                "chinese": "英语",
+                "arabic": "الإنجليزية",
+                "hebrew": "אנגלית"
+            }'>English</option>
             
-            <!-- 中文（约14亿） -->
+            <!-- 中文 -->
             <option value="chinese" data-names='{
                 "english": "Chinese",
-                "english-gb": "Chinese",
                 "chinese": "中文",
-                "spanish": "Chino",
-                "spanish-mx": "Chino",
-                "spanish-ar": "Chino",
-                "russian": "Китайский",
                 "arabic": "الصينية",
-                "hebrew": "סינית",
-                "esperanto": "Ĉina",
-                "lojban": "jungo",
-                "japanese": "中国語",
-                "korean": "중국어",
-                "french-ca": "Chinois",
-                "hindi": "चीनी",
-                "portuguese": "Chinês",
-                "sanskrit": "चीनभाषा"
+                "hebrew": "סינית"
             }'>中文</option>
             
-            <!-- 繁体中文选项 -->
-            <option value="chinese-traditional" data-names='{
-                "english": "Chinese (Traditional)",
-                "english-gb": "Chinese (Traditional)",
-                "chinese": "繁體中文",
-                "chinese-traditional": "繁體中文",
-                "spanish": "Chino (Tradicional)",
-                "spanish-mx": "Chino (Tradicional)",
-                "spanish-ar": "Chino (Tradicional)",
-                "russian": "Китайский (традиционный)",
-                "arabic": "الصينية (التقليدية)",
-                "hebrew": "סינית (מסורתית)",
-                "esperanto": "Ĉina (Tradicia)",
-                "lojban": "jungo poi tolcitno",
-                "japanese": "繁体字中国語",
-                "korean": "번체 중국어",
-                "french-ca": "Chinois (Traditionnel)",
-                "hindi": "पारंपरिक चीनी",
-                "portuguese": "Chinês (Tradicional)",
-                "sanskrit": "परम्परागत चीनभाषा"
-            }'>繁體中文</option>
-            
-            <!-- 印地语（约6亿） -->
-            <option value="hindi" data-names='{
-                "english": "Hindi",
-                "english-gb": "Hindi",
-                "chinese": "印地语",
-                "spanish": "Hindi",
-                "spanish-mx": "Hindi",
-                "spanish-ar": "Hindi",
-                "russian": "Хинди",
-                "arabic": "الهندية",
-                "hebrew": "הינדי",
-                "esperanto": "Hindia",
-                "lojban": "xindi",
-                "japanese": "ヒンディー語",
-                "korean": "힌디어",
-                "french-ca": "Hindi",
-                "hindi": "हिंदी",
-                "portuguese": "Hindi",
-                "sanskrit": "हिन्दी"
-            }'>हिंदी</option>
-            
-            <!-- 西班牙语（约5.5亿） -->
-            <option value="spanish" data-names='{
-                "english": "Spanish",
-                "english-gb": "Spanish",
-                "chinese": "西班牙语",
-                "spanish": "Español",
-                "spanish-mx": "Español",
-                "spanish-ar": "Español",
-                "russian": "Испанский",
-                "arabic": "الإسبانية",
-                "hebrew": "ספרדית",
-                "esperanto": "Hispana",
-                "lojban": "banfi",
-                "japanese": "スペイン語",
-                "korean": "스페인어",
-                "french-ca": "Espagnol",
-                "hindi": "स्पैनिश",
-                "portuguese": "Espanhol",
-                "sanskrit": "स्पेनभाषा"
-            }'>Español</option>
-            <option value="spanish-mx" data-names='{
-                "english": "Spanish (Mexico)",
-                "english-gb": "Spanish (Mexico)",
-                "chinese": "西班牙语（墨西哥）",
-                "spanish": "Español (México)",
-                "spanish-mx": "Español (México)",
-                "spanish-ar": "Español (México)",
-                "russian": "Испанский (Мексика)",
-                "arabic": "الإسبانية (المكسيك)",
-                "hebrew": "ספרדית (מקסיקו)",
-                "esperanto": "Hispana (Meksiko)",
-                "lojban": "banfi mexno",
-                "japanese": "スペイン語（メキシコ）",
-                "korean": "스페인어 (멕시코)",
-                "french-ca": "Espagnol (Mexique)",
-                "hindi": "स्पैनिश (मेक्सिको)",
-                "portuguese": "Espanhol (México)",
-                "sanskrit": "स्पेनभाषा (मेक्सिको)"
-            }'>Español (México)</option>
-            <option value="spanish-ar" data-names='{
-                "english": "Spanish (Argentina)",
-                "english-gb": "Spanish (Argentina)",
-                "chinese": "西班牙语（阿根廷）",
-                "spanish": "Español (Argentina)",
-                "spanish-mx": "Español (Argentina)",
-                "spanish-ar": "Español (Argentina)",
-                "russian": "Испанский (Аргентина)",
-                "arabic": "الإسبانية (الأرجنتين)",
-                "hebrew": "ספרדית (ארגנטינה)",
-                "esperanto": "Hispana (Argentino)",
-                "lojban": "banfi gentina",
-                "japanese": "スペイン語（アルゼンチン）",
-                "korean": "스페인어 (아르헨티나)",
-                "french-ca": "Espagnol (Argentine)",
-                "hindi": "स्पैनिश (अर्जेंटीना)",
-                "portuguese": "Espanhol (Argentina)",
-                "sanskrit": "स्पेनभाषा (अर्जेन्टीना)"
-            }'>Español (Argentina)</option>
-            
-            <!-- 阿拉伯语（约4.2亿） -->
+            <!-- 阿拉伯语 -->
             <option value="arabic" data-names='{
                 "english": "Arabic",
-                "english-gb": "Arabic",
                 "chinese": "阿拉伯语",
-                "spanish": "Árabe",
-                "spanish-mx": "Árabe",
-                "spanish-ar": "Árabe",
-                "russian": "Арабский",
                 "arabic": "العربية",
-                "hebrew": "ערבית",
-                "esperanto": "Araba",
-                "lojban": "rabko",
-                "japanese": "アラビア語",
-                "korean": "아랍어",
-                "french-ca": "Arabe",
-                "hindi": "अरबी",
-                "portuguese": "Árabe",
-                "sanskrit": "अरबी भाषा"
+                "hebrew": "ערבית"
             }'>العربية</option>
             
-            <!-- 法语（约3亿） -->
-            <option value="french-ca" data-names='{
-                "english": "French (Canada)",
-                "english-gb": "French (Canada)",
-                "chinese": "法语（加拿大）",
-                "spanish": "Francés (Canadá)",
-                "spanish-mx": "Francés (Canadá)",
-                "spanish-ar": "Francés (Canadá)",
-                "russian": "Французский (Канада)",
-                "arabic": "الفرنسية (كندا)",
-                "hebrew": "צרפתית (קנדה)",
-                "esperanto": "Franca (Kanado)",
-                "lojban": "fasybau kadnygu",
-                "japanese": "フランス語（カナダ",
-                "korean": "프랑스어 (캐나다)",
-                "french-ca": "Français (Canada)",
-                "hindi": "फ्रेंच (कनाडा)",
-                "portuguese": "Francês (Canadá)",
-                "sanskrit": "फ्रेंच भाषा (कनाडा)"
-            }'>Français (Canada)</option>
-            
-            <!-- 葡萄牙语（约2.8亿） -->
-            <option value="portuguese" data-names='{
-                "english": "Portuguese",
-                "english-gb": "Portuguese",
-                "chinese": "葡萄牙语",
-                "spanish": "Portugués",
-                "spanish-mx": "Portugués",
-                "spanish-ar": "Portugués",
-                "russian": "Португальский",
-                "arabic": "البرتغالية",
-                "hebrew": "פורטוגזית",
-                "esperanto": "Portugala",
-                "lojban": "potugu",
-                "japanese": "ポルトガル語",
-                "korean": "포르투갈어",
-                "french-ca": "Portugais",
-                "hindi": "पुर्तगाली",
-                "portuguese": "Português",
-                "sanskrit": "पुर्तगाली भषा"
-            }'>Português</option>
-            
-            <!-- 俄语（约2.6亿） -->
-            <option value="russian" data-names='{
-                "english": "Russian",
-                "english-gb": "Russian",
-                "chinese": "俄语",
-                "spanish": "Ruso",
-                "spanish-mx": "Ruso",
-                "spanish-ar": "Ruso",
-                "russian": "Русский",
-                "arabic": "الروسية",
-                "hebrew": "רוסית",
-                "esperanto": "Rusa",
-                "lojban": "rusko",
-                "japanese": "ロシア語",
-                "korean": "러시아어",
-                "french-ca": "Russe",
-                "hindi": "रूसी",
-                "portuguese": "Russo",
-                "sanskrit": "रूसी भाषा"
-            }'>Русский</option>
-            
-            <!-- 日语（约1.3亿） -->
-            <option value="japanese" data-names='{
-                "english": "Japanese",
-                "english-gb": "Japanese",
-                "chinese": "日语",
-                "spanish": "Japonés",
-                "spanish-mx": "Japonés",
-                "spanish-ar": "Japonés",
-                "russian": "Японский",
-                "arabic": "اليابانية",
-                "hebrew": "יפנית",
-                "esperanto": "Japana",
-                "lojban": "ponjo",
-                "japanese": "日本語",
-                "korean": "일본어",
-                "french-ca": "Japonais",
-                "hindi": "जापानी",
-                "portuguese": "Japonês",
-                "sanskrit": "जापानी भाषा"
-            }'>日本語</option>
-            
-            <!-- 韩语（约8000万） -->
-            <option value="korean" data-names='{
-                "english": "Korean",
-                "english-gb": "Korean",
-                "chinese": "韩语",
-                "spanish": "Coreano",
-                "spanish-mx": "Coreano",
-                "spanish-ar": "Coreano",
-                "russian": "Корейский",
-                "arabic": "الكورية",
-                "hebrew": "קוריאנית",
-                "esperanto": "Korea",
-                "lojban": "xango",
-                "japanese": "韓国語",
-                "korean": "한국어",
-                "french-ca": "Coréen",
-                "hindi": "कोरियाई",
-                "portuguese": "Coreano",
-                "sanskrit": "कोरियाई भाषा"
-            }'>한국어</option>
-            
-            <!-- 希伯来语（约900万） -->
+            <!-- 希伯来语 -->
             <option value="hebrew" data-names='{
                 "english": "Hebrew",
-                "english-gb": "Hebrew",
                 "chinese": "希伯来语",
-                "spanish": "Hebreo",
-                "spanish-mx": "Hebreo",
-                "spanish-ar": "Hebreo",
-                "russian": "Иврит",
                 "arabic": "العبرية",
-                "hebrew": "עברית",
-                "esperanto": "Hebrea",
-                "lojban": "xebro",
-                "japanese": "ヘブライ語",
-                "korean": "히브리어",
-                "french-ca": "Hébreu",
-                "hindi": "हिब्रू",
-                "portuguese": "Hebraico",
-                "sanskrit": "यहूदी भाषा"
+                "hebrew": "עברית"
             }'>עברית</option>
-            
-            <!-- 世界语（约200万） -->
-            <option value="esperanto" data-names='{
-                "english": "Esperanto",
-                "english-gb": "Esperanto",
-                "chinese": "世界语",
-                "spanish": "Esperanto",
-                "spanish-mx": "Esperanto",
-                "spanish-ar": "Esperanto",
-                "russian": "Эсперанто",
-                "arabic": "الإسبرانتو",
-                "hebrew": "אספרנטו",
-                "esperanto": "Esperanto",
-                "lojban": "bangrn",
-                "japanese": "エスペラント語",
-                "korean": "에스페란토어",
-                "french-ca": "Espéranto",
-                "hindi": "एस्पेरांतो",
-                "portuguese": "Esperanto",
-                "sanskrit": "एस्पेरान्तो"
-            }'>Esperanto</option>
-            
-            <!-- 古典语言和人造语言 -->
-            <option value="sanskrit" data-names='{
-                "english": "Sanskrit",
-                "english-gb": "Sanskrit",
-                "chinese": "梵语",
-                "spanish": "Sánscrito",
-                "spanish-mx": "Sánscrito",
-                "spanish-ar": "Sánscrito",
-                "russian": "Санскрит",
-                "arabic": "السنسكريتية",
-                "hebrew": "סנסקריט",
-                "esperanto": "Sanskrito",
-                "lojban": "sanske",
-                "japanese": "サンスクリット語",
-                "korean": "산스크리트어",
-                "french-ca": "Sanskrit",
-                "hindi": "संस्कृत",
-                "portuguese": "Sânscrito",
-                "sanskrit": "संस्कृतम्"
-            }'>संस्कृतम्</option>
-            <option value="lojban" data-names='{
-                "english": "Lojban",
-                "english-gb": "Lojban",
-                "chinese": "逻辑语",
-                "spanish": "Lojban",
-                "spanish-mx": "Lojban",
-                "spanish-ar": "Lojban",
-                "russian": "Ложбан",
-                "arabic": "لوجبان",
-                "hebrew": "לוז׳באן",
-                "esperanto": "Loĵbano",
-                "lojban": "lojban",
-                "japanese": "ロジバン",
-                "korean": "로지반",
-                "french-ca": "Lojban",
-                "hindi": "लॉजबान",
-                "portuguese": "Lojban",
-                "sanskrit": "लोज्बान"
-            }'>Lojban</option>
         </select>
     </div>
 
+    <!-- 英语部分 -->
     <div class="section english">
         <h1>Thank you for choosing our Neck Blocks game!</h1>
         <p class="subtitle">Use it to free your neck!</p>
@@ -398,12 +155,11 @@
                 <li>Support for match-3 mode (wanted both features, that's just how it is; originally wanted to add vegetable and fruit textures, but that'll have to come later)</li>
                 <li>Turned off some operation sound effects because I prefer using headphones with noise cancellation, either without playing anything or with soft music or yoga audio</li>
             </ul>
-            <p>This also inspired me to develop a future adventure game using spatial audio and AirPods head control—essentially, a game you play using only your ears and head movements, not your eyes. If you're interested in this concept, please reach out to discuss and explore together!</p>
+            <p>This has also inspired me to develop a future adventure game using spatial audio and AirPods head control—essentially, a game you play using only your ears and head movements, not your eyes. If you're interested in this concept, please reach out to discuss and explore together!</p>
         </div>
     </div>
 
-    <hr class="divider">
-
+    <!-- 中文部分 -->
     <div class="section chinese">
         <h1>感谢您选择我们的 Neck Blocks 游戏！</h1>
         <p class="subtitle">快用它来解放您的脖子吧！</p>
@@ -419,143 +175,22 @@
 
         <div class="story">
             <h2>开发者故事</h2>
-            <p>我曾在大型公司從事智慧硬體和人工智慧領域的工作，現在正在涉足與人工智慧相關的創業。</p>
-            <p>兩年前，在一次例行體檢中，我妻子被診斷出患有甲狀腺結節。今年，經過活檢，我們發現這是一個惡性腫瘤，於是她接受了手術，切除了左側甲狀腺。手術很順利，但這是一個相當漫長的過程。今後，她需要仔細注意飲食——例如，限制海帶和十字花科蔬菜等食物。</p>
-            <p>這啟發我創建了一個應用程式（最早是飲食控制的APP，但我發現線上表格就能解決該問題），來幫助她恢復僵硬的頸部。想到她喜歡消消樂，我喜歡俄羅斯方塊，然後看到PH上有個通過AirPods來提醒頸部彎曲時間的APP，靈光一閃，啊哈！</p>
-            <p>主要功能：</p>
+            <p>我曾在大型公司从事智能硬件和人工智能领域的工作，现在正在涉足与人工智能相关的创业。</p>
+            <p>两年前，在一次例行体检中，我妻子被诊断出患有甲状腺结节。今年，经过活检，我们发现这是一个恶性肿瘤，于是她接受了手术，切除了左侧甲状腺。手术很顺利，但这是一个相当漫长的过程。今后，她需要仔细注意饮食——例如，限制海带和十字花科蔬菜等食物。</p>
+            <p>这启发我创建了一个应用程序（最早是饮食控制的APP，但我发现在线表格就能解决该问题），来帮助她恢复僵硬的脖子，想到她喜欢消消乐，我喜欢俄罗斯方块，然后看到PH上有个通过AirPods来提醒脖子弯曲时间的APP，灵光一闪，啊哈！</p>
+            <p>于是找了一个方块项目进行修改，增加了以下功能：</p>
             <ul>
-                <li>支援通過AirPods來檢測頭部動作來進行遊戲（抬頭為旋轉方塊，低頭加速方塊下落，左右就不用說了）</li>
-                <li>支援消消樂模式（既要又要，就是要這樣，本來還想加上蔬果的貼圖，只能後續了）</li>
-                <li>把一些操作的音效關閉了，因為我喜歡耳機就開降噪，不播放東西，或者播放柔和一些輕音樂或者瑜伽音頻</li>
+                <li>支持通过AirPods来检测头部动作来进行游戏（抬头为旋转方块，低头加速方块下落，左右就不用说了）</li>
+                <li>支持消消乐模式（既要又要，就是要这样，本来还想加上蔬菜水果的贴图，只能后续了）</li>
+                <li>把一些操作的音效关闭了，因为我喜欢耳机就开减噪，不播放东西，或者播放柔和一些轻音乐或者瑜伽音频</li>
             </ul>
-            <p>如果您對這個概念感興趣，請聯繫我，我們可以一起討論和探索！</p>
+            <p>这也启发我后续会去做一款空间音频实现声音或者空间的感知定位结合AirPods头部控制来实现的冒险游戏，简而言之，就是一款不使用眼睛，只使用耳朵和头部来玩的游戏。如果您对这个概念感兴趣，请联系我，我们可以一起讨论和探索！</p>
         </div>
     </div>
 
-    <hr class="divider">
-
-    <div class="section spanish">
-        <h1>¡Gracias por elegir nuestro juego Neck Blocks!</h1>
-        <p class="subtitle">¡Úsalo para liberar tu cuello!</p>
-        
-        <p class="message">Si encuentras algún problema con nuestros productos, contáctanos por correo electrónico y estaremos encantados de ayudarte.</p>
-        
-        <div class="contact">
-            <strong>Correo electrónico:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">¡Gracias!</p>
-
-        <div class="story">
-            <h2>Historia del Desarrollador</h2>
-            <p>Anteriormente trabajé en hardware inteligente e IA en grandes empresas, y ahora estoy emprendiendo en proyectos relacionados con la IA.</p>
-            <p>Hace dos años, durante un chequeo médico de rutina, a mi esposa le diagnosticaron nódulos tiroideos. Este año, después de una biopsia, descubrimos que era un tumor maligno, así que se sometió a una cirugía para remover la tiroides izquierda. La operación salió bien, pero fue un proceso bastante largo. De ahora en adelante, debe tener cuidado con su alimentación — por ejemplo, limitando alimentos como las algas y las verduras crucíferas.</p>
-            <p>Esto me inspiró a crear una aplicación para ayudarla a recuperarse de la rigidez del cuello. Sabiendo que a ella le encantan los juegos de tres en línea y a mí me gusta el Tetris, y después de ver una aplicación que te recuerda hacer ejercicios del cuello usando AirPods, ¡tuve una idea genial!</p>
-            <p>Características principales:</p>
-            <ul>
-                <li>Soporte para jugar mediante la detección de movimientos de cabeza con AirPods</li>
-                <li>Soporte para modo de tres en línea</li>
-                <li>Efectos de sonido opcionales con cancelación de ruido</li>
-            </ul>
-            <p>Si te interesa este concepto, ¡contáctanos para platicar y explorar juntos!</p>
-        </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section spanish-mx">
-        <h1>¡Gracias por elegir nuestro juego Neck Blocks!</h1>
-        <p class="subtitle">¡Úsalo para liberar tu cuello!</p>
-        
-        <p class="message">Si tienes algún problema con nuestros productos, contáctanos por correo electrónico y con gusto te ayudaremos.</p>
-        
-        <div class="contact">
-            <strong>Correo electrónico:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">¡Muchas gracias!</p>
-
-        <div class="story">
-            <h2>Historia del Desarrollador</h2>
-            <p>Anteriormente trabajé en hardware inteligente e IA en grandes empresas, y ahora estoy emprendiendo en proyectos relacionados con la IA.</p>
-            <p>Hace dos años, durante un chequeo médico de rutina, a mi esposa le diagnosticaron nódulos tiroideos. Este año, después de una biopsia, descubrimos que era un tumor maligno, así que se sometió a una cirugía para remover la tiroides izquierda. La operación salió bien, pero fue un proceso bastante largo. De ahora en adelante, debe tener cuidado con su alimentación — por ejemplo, limitando alimentos como las algas y las verduras crucíferas.</p>
-            <p>Esto me inspiró a crear una aplicación para ayudarla a recuperarse de la rigidez del cuello. Sabiendo que a ella le encantan los juegos de tres en línea y a mí me gusta el Tetris, y después de ver una aplicación que te recuerda hacer ejercicios del cuello usando AirPods, ¡tuve una idea genial!</p>
-            <p>Características principales:</p>
-            <ul>
-                <li>Soporte para jugar mediante la detección de movimientos de cabeza con AirPods</li>
-                <li>Soporte para modo de tres en línea</li>
-                <li>Efectos de sonido opcionales con cancelación de ruido</li>
-            </ul>
-            <p>Si te interesa este concepto, ¡contáctanos para platicar y explorar juntos!</p>
-        </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section spanish-ar">
-        <h1>¡Gracias por elegir nuestro juego Neck Blocks!</h1>
-        <p class="subtitle">¡Usalo para liberar tu cuello!</p>
-        
-        <p class="message">Si tenés algún problema con nuestros productos, contactanos por correo electrónico y con gusto te ayudaremos.</p>
-        
-        <div class="contact">
-            <strong>Correo electrónico:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">¡Muchas gracias!</p>
-
-        <div class="story">
-            <h2>Historia del Desarrollador</h2>
-            <p>Anteriormente trabajé en hardware inteligente e IA en grandes empresas, y ahora estoy emprendiendo en proyectos relacionados con la IA.</p>
-            <p>Hace dos años, durante un chequeo médico de rutina, a mi esposa le diagnosticaron nódulos tiroideos. Este año, después de una biopsia, descubrimos que era un tumor maligno, así que se sometió a una cirugía para remover la tiroides izquierda. La operación salió bien, pero fue un proceso bastante largo. De ahora en adelante, debe tener cuidado con su alimentación — por ejemplo, limitando alimentos como las algas y las verduras crucíferas.</p>
-            <p>Esto me inspiró a crear una aplicación para ayudarla a recuperarse de la rigidez del cuello. Sabiendo que a ella le encantan los juegos de tres en línea y a mí me gusta el Tetris, y después de ver una aplicación que te recuerda hacer ejercicios del cuello usando AirPods, ¡tuve una idea genial!</p>
-            <p>Características principales:</p>
-            <ul>
-                <li>Soporte para jugar mediante la detección de movimientos de cabeza con AirPods</li>
-                <li>Soporte para modo de tres en línea</li>
-                <li>Efectos de sonido opcionales con cancelación de ruido</li>
-            </ul>
-            <p>Si te interesa este concepto, ¡contactanos para charlar y explorar juntos!</p>
-        </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section russian">
-        <h1>Спасибо, что выбрали нашу игру Neck Blocks!</h1>
-        <p class="subtitle">Используйте её, чтобы освободить свою шею!</p>
-        
-        <p class="message">Если у вас возникнут проблемы с нашими продуктами, пожалуйста, свяжитесь с нами по электронной почте, и мы будем рады вам помочь!</p>
-        
-        <div class="contact">
-            <strong>Электронная почта:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">Спасибо!</p>
-
-        <div class="story">
-            <h2>История разработчика</h2>
-            <p>Ране я работал в крупных компаниях в сфере умного оборудования и ИИ, а сейчас занимаюсь предпринимательством в сфере ИИ.</p>
-            <p>Два года назад во время планового медосмотра у моей жены обнаружили узлы в щитовидной железе. В этом году после биопсии выяснилось, что это злокачественная опухоль, и ей сделали операцию по удалению левой доли щитовидной железы. Операция прошла успешно, но это был довольно длительный процесс. Теперь ей нужно внимательно следить за питанием, например, ограничивать употребление морской капусты и крестоцветных овощей.</p>
-            <p>Это вдохновило меня на создание приложения для помощи в восстановлении подвижности шеи. Зная, что она любит игры-три-в-ряд, а я люблю Тетрис, и увидев приложение, которое напоминает о времени сгибания шеи с помощью AirPods, у меня появилась идея!</p>
-            <p>Основные функции:</p>
-            <ul>
-                <li>Управление с помощью движений головы через AirPods</li>
-                <li>Режим три-в-ряд</li>
-                <li>Опциональные звуковые эффекты с шумоподавлением</li>
-            </ul>
-            <p>Если вас заинтересовала эта концепция, свяжитесь с нами для обсуждения и совместного исследования!</p>
-        </div>
-    </div>
-
-    <hr class="divider">
-
+    <!-- 阿拉伯语部分 -->
     <div class="section arabic" dir="rtl">
-        <h1>!Neck Blocks شكراً لاختيارك لعبة</h1>
+        <h1>!Neck Blocks شكرا لاختيارك لعبة</h1>
         <p class="subtitle">!استخدمها لتحرير رقبتك</p>
         
         <p class="message">إذا واجهتك أي مشكلة مع منتجاتنا، يرجى التواصل معنا عبر البريد الإلكتروني وسنكون سعداء بمساعدتك</p>
@@ -569,20 +204,20 @@
 
         <div class="story">
             <h2>قصة المطور</h2>
-            <p>عملت سابقاً في جال الأجهزة الذكية والذكاء الاصطاعي في شرات كبرى، والآن أخوض مجال ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
-            <p>قبل عامين، خلال فحص روتيني، تم تشخيص زوجتي بعقد في الغدة الدرقية. هذا العام، بعد الخزعة، اكتشفنا أنه ورم خبيث، لذا خضعت لعملية لإزالة الغدة الدرقية اليسرى. نجحت العملية، لكنها كانت عملية طويلة. من الآن فصاعداً، عليها الانتباه لنظامها الغذائي.</p>
-            <p>:الميزات الرئيسية</p>
+            <p>عملت سابقاً في مجال الأجهزة الذكية والذكاء الاصطناعي في شركات كبرى، والآن أخوض مجال ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
+            <p>قبل عامين، خلال فحص روتيني، تم تشخيص زوجتي بعقد في الغدة الدرقية. هذا العام، بعد الخزعة، اكتشفنا أنه ورم خبيث، لذا خضعت لعملية لإزالة الغدة الدرقية اليسرى. نجحت العملية، لكنها كانت عملية طويلة. من الآن فصاعداً، عليها الانتباه لنظامها الغذائي - على سبيل المثال، تقليل تناول الأعشاب البحرية والخضروات الصليبية.</p>
+            <p>هذا ألهمني لإنشاء تطبيق (في البداية كان تطبيق للتحكم في النظام الغذائي، لكنني وجدت أن جداول البيانات عبر الإنترنت يمكن أن تحل هذه المشكلة) لمساعدتها في التعافي من تصلب الرقبة. وبما أنها تحب ألعاب المطابقة الثلاثية وأنا أحب تتريس، وبعد رؤية تطبيق على PH يذكرك بوقت ثني الرقبة باستخدام AirPods، جاءتني فكرة رائعة!</p>
+            <p>:لذا قمت بتعديل مشروع الكتل وأضفت الميزات التالية</p>
             <ul>
-                <li>AirPods دعم اللعب من خلال اكتشاف حركة الرأس باستخدام</li>
-                <li>دعم وضع المطابقة</li>
-                <li>مؤثرات صوتية اختيارية مع إلغاء الضوضاء</li>
+                <li>دعم اللعب من خلال اكتشاف حركة الرأس باستخدام AirPods (الإمالة لأعلى لتدوير الكتل، والإمالة لأسفل لتسريع سقوط الكتل، والحركات اليسرى واليمنى واضحة)</li>
+                <li>دعم وضع المطابقة الثلاثية (أردت كلا الميزتين، هكذا هو الأمر؛ كنت أريد في الأصل إضافة صور الخضار والفواكه، لكن سيأتي ذلك لاحقاً)</li>
+                <li>قمت بإيقاف بعض المؤثرات الصوتية لأنني أفضل استخدام السماعات مع إلغاء الضوضاء، إما بدون تشغيل أي شيء أو مع موسيقى هادئة أو صوت اليوغا</li>
             </ul>
-            <p>!إذا كنت مهتماً بهذا المفهوم، تواصل معنا للمناقشة والاستكشاف معاً</p>
+            <p>كما ألهمني هذا لتطوير لعبة مغامرات مستقبلية باستخدام الصوت المكاني والتحكم في الرأس عبر AirPods - في الأساس، لعبة تلعبها باستخدام أذنيك وحركات رأسك فقط، وليس عينيك. إذا كنت مهتماً بهذا المفهوم، يرجى التواصل معنا للمناقشة والاستكشاف معاً!</p>
         </div>
     </div>
 
-    <hr class="divider">
-
+    <!-- 希伯来语部分 -->
     <div class="section hebrew" dir="rtl">
         <h1>!Neck Blocks תודה שבחרתם במשחק</h1>
         <p class="subtitle">!השתמשו בו לשחרור הצוואר שלכם</p>
@@ -599,299 +234,15 @@
         <div class="story">
             <h2>סיפור המפתח</h2>
             <p>בעבר עבדתי בחברות גדולות בתחום החומרה החכמה והבינה המלאכותית, וכעת אני עוסק ביזמות בתחום הבינה המלאכותית.</p>
-            <p>לפני שנתיים, במהלך בדיקה שגרתית, אובחנה אשתי עם קשריות בבלוטת התריס. השנה, לאחר ביופסיה, גילינו שזה גידול ממאיר, ולכן היא עברה ניתוח להסרת בלוטת התריס השמאלית.</p>
-            <p>:תכונות עיקריות</p>
+            <p>לפני שנתיים, במהלך בדיקה שגרתית, אובחנה אשתי עם קשריות בבלוטת התריס. השנה, לאחר ביופסיה, גילינו שזה גידול ממאיר, ולכן היא עברה ניתוח להסרת בלוטת התריס השמאלית. הניתוח עבר בהצלחה, אך זה היה תהליך ארוך. מעתה והלאה, עליה להקפיד על תזונתה - למשל, להגביל מאכלים כמו אצות וירקות מצליבים.</p>
+            <p>זה השרה אותי ליצור אפליקציה (תחילה אפליקציה לבקרת תזונה, אך גיליתי שגיליונות אלקטרוניים מקוונים יכולים לפתור את הבעיה) כדי לעזור לה להתאושש מנוקשות הצוואר. בידיעה שהיא אוהבת משחקי התאמה ואני אוהב טטריס، ולאחר שראיתי אפליקציה ב-PH שמזכירה לך על זמן כיפוף הצוואר באמצעות AirPods، הייתה לי הארה!</p>
+            <p>:אז שיניתי פרויקט בלוקים והוספתי את התכונות הבאות</p>
             <ul>
-                <li>AirPods מיכה במשחק באמצעות זיהוי תנועות ראש עם</li>
-                <li>תמיכה במצב התאמה</li>
-                <li>אפקטים קוליים אופציונליים עם ביטול רעשים</li>
+                <li>תמיכה במשחק באמצעות זיהוי תנועות ראש עם AirPods (הטיה למעלה לסיבוב בלוקים, הטיה למטה להאצת נפילת בלוקים, תנועות שמאלה וימינה מובנות מאליהן)</li>
+                <li>תמיכה במצב התאמה (רציתי את שתי התכונות, ככה זה; במקור רציתי להוסיף טקסטורות של ירקות ופירות, אבל זה יבוא מאוחר יותר)</li>
+                <li>כיביתי כמה אפקטים קוליים כי אני מעדיף להשתמש באוזניות עם ביטול רעשים, או ללא השמעת דבר או עם מוזיקה עדינה או אודיו של יוגה</li>
             </ul>
-            <p>!אם אתם מתעניינים ברעיון הזה, צרו איתנו קשר כדי לדון ולחקור יחד</p>
-        </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section esperanto">
-        <h1>Dankon pro elekti nian ludon Neck Blocks!</h1>
-        <p class="subtitle">Uzu ĝin por liberigi vian kolon!</p>
-        
-        <p class="message">Se vi renkontas problemojn kun niaj produktoj, bonvolu kontakti nin per retpoŝto kaj ni ĝojos helpi vin!</p>
-        
-        <div class="contact">
-            <strong>Retpoŝta adreso:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">Dankon!</p>
-
-        <div class="story">
-            <h2>Rakonto de la Programisto</h2>
-            <p>Mi antaŭe laboris pri inteligenta aparataro kaj AI en grandaj kompanioj, kaj nun mi entreprenas AI-rilatajn projektojn.</p>
-            <p>Antaŭ du jaroj, dum rutina medicina ekzameno, mia edzino estis diagnozita kun tiroida nodulo. Ĉi-jare, post biopsia ekzameno, ni malkovris ke ĝi estis maligna tumoro, do ŝi submetiĝis al operacio por forigi la maldekstran tiroidon. La operacio sukcesis, sed ĝi estis sufiĉe longa procezo. De nun, ŝi devas zorgi pri sia dieto — ekzemple, limigi manĝaĵojn kiel algojn kaj kruciferajn legomojn.</p>
-            <p>Tio inspiris min krei aplikaĵon por helpi ŝin resaniĝi de kola rigideco. Sciante ke ŝi ŝatas kunigajn ludojn kaj mi ŝatas Tetrison, kaj post vidi aplikaĵon kiu memorigas pri kola fleksado uzante AirPods, mi havis brilideon!</p>
-            <p>Ĉefaj funkcioj:</p>
-            <ul>
-                <li>Subteno por ludi per kapmovada detektado kun AirPods</li>
-                <li>Subteno por kuniga reĝimo</li>
-                <li>Laŭvolaj sonefektoj kun brua nuligado</li>
-            </ul>
-            <p>Se vi interesiĝas pri ĉi tiu koncepto, bonvolu kontakti nin por diskuti kaj esplori kune!</p>
-        </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section lojban">
-        <h1>ki'e le nu do cuxna le mi kelci be le Neck Blocks</h1>
-        <p class="subtitle">ko pilno fi lo nu dunli le do cnebo</p>
-        
-        <p class="message">ga nai do penmi lo nabmi lo mipri be mi gi e'o do mrilu mi .i mi gleki lo nu sidju do</p>
-        
-        <div class="contact">
-            <strong>mrilu judri:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">ki'e</p>
-
-        <div class="story">
-            <h2>lisri be le sa'orpre</h2>
-            <p>mi pu gunka le barda kagni pe le prije tutci .e le menli pruce .i ca mi co'a cuntu le nu mi zbasu le menli pruce</p>
-            <p>re nanca purci .i ca le nu mi'a cu kurji djuno .i le mi speni cu se facki le du'u vasxu le xadni flalu .i le cabna nanca .i ba le nu facki .i mi'a facki le du'u malignant tumoro .i se ki'u bo ra pu se operati fi le nu vimcu le zunle xadni flalu .i le nu operati cu zabna .i ku'i ze'u fasnu .i ca le nu co'a .i ra bilga le nu kurji le nu citka</p>
-            <p>Ĉefaj funkcioj:</p>
-            <ul>
-                <li>sidju le nu kelci sepi'o le nu zgana le stedu muvdu sepi'o le AirPods</li>
-                <li>sidju le nu kelci sepi'o le nu kansa muvdu</li>
-                <li>le sance cu se cuxna .i le sance cu se vimcu</li>
-            </ul>
-            <p>ga nai do se cinri le sidbo gi e'o do mrilu mi .i mi'o ka'e casnu je lanli kansa</p>
-        </div>
-    </div>
-
-    <div class="section japanese">
-        <h1>Neck Blocks をお選びいただき、ありがとうございます！</h1>
-        <p class="subtitle">首のストレッチにご活用ください！</p>
-        
-        <p class="message">製品についてご不明な点がございましたら、メールにてお問い合わせください。喜んでサポートさせていただきます。</p>
-        
-        <div class="contact">
-            <strong>メールアドレス：</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">ありがとうございます！</p>
-
-        <div class="story">
-            <h2>開発者ストーリー</h2>
-            <p>私は以前、大手企業でスマートハードウェアとAIの分野で働いていました。現在はAI関連の起業に取り組んでいます。</p>
-            <p>2年前、定期健康診断で妻が甲状腺結節と診断されました。今年、生検の結果、悪性腫瘍であることが判明し、左甲状腺の摘出手術を受けました。手術は成功しましたが、長い過程でした。これからは食事に気を付ける必要があります—例えば、昆布や十字花科の野菜などの摂取を制限する必要があります。</p>
-            <p>これをきっかけに、首のこりを改善するためのアプリケーションを作ることを思いつきました。妻がマッチ3パズルゲームを好み、私がテトリスを好んでいること、そしてAirPodsで首の運動を促すアプリを見たことから、らめきを得ました！</p>
-            <p>主な機能：</p>
-            <ul>
-                <li>AirPodsによる頭の動きの検知でプレイ可能</li>
-                <li>マッチ3モードのサポート</li>
-                <li>ノイズキャンセリング機能付きのオプショナルサウンドエフェクト</li>
-            </ul>
-            <p>このコンセプトにご興味があましたら、ぜひご連絡ください。一緒に議論し、探求していきましょう！</p>
-        </div>
-    </div>
-
-    <div class="section korean">
-        <h1>Neck Blocks 게임을 선택해 주셔서 감사합니다!</h1>
-        <p class="subtitle">목의 건강을 위해 사용해보세요!</p>
-        
-        <p class="message">제품에 대해 문제가 있으시면 이메일로 문의해 주시기 바랍니다. 기꺼이 도와드리겠습니다!</p>
-        
-        <div class="contact">
-            <strong>이메일 주소:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">감사합니다!</p>
-
-        <div class="story">
-            <h2>개발자 이야기</h2>
-            <p>저는 이전에 대기업에서 스마트 하드웨어와 AI 분야에서 일했으며, 현재는 AI 관련 창업을 하고 있습니다.</p>
-            <p>2년 전, 정기 건강검진에서 아내가 갑상선 결절 진단을 받았습니다. 올해, 생��� 결과 악성 종양으로 판명되어 왼쪽 갑상선 절제 수술을 받았습니다. 수술은 성공적이었지만 긴 과정이었습니다. 앞으로는 식단에 주의를 기울여야 합니다—예를 들어, 미역이나 십자화과 채소 등의 섭취를 제한해야 합니다.</p>
-            <p>이것이 계기가 되어 목의 경직을 개선하기 위한 애플리케이션을 만들게 되었습니다. 아내가 매치-3 게임을 좋아하고 제가 테트리스를 좋아한다는 점, 그리고 AirPods로 목 운동 시간을 알려주는 앱을 보고 아이디어가 떠올랐습니다!</p>
-            <p>주요 기능:</p>
-            <ul>
-                <li>AirPods를 통한 머리 움직임 감지로 게임 플레이 가능</li>
-                <li>매치-3 모드 지원</li>
-                <li>노이즈 캔슬링이 포함된 선택적 사운드 효과</li>
-            </ul>
-            <p>이 컨셉에 관심이 있으시다면 연락 주시기 바랍니다. 함께 논의하고 탐구해 보아요!</p>
-        </div>
-    </div>
-
-    <div class="section french-ca">
-        <h1>Merci d'avoir choisi notre jeu Neck Blocks!</h1>
-        <p class="subtitle">Utilisez-le pour libérer votre cou!</p>
-        
-        <p class="message">Si vous rencontrez des problèmes avec nos produits, veuillez nous contacter par courriel et nous serons heureux de vous aider!</p>
-        
-        <div class="contact">
-            <strong>Adresse courriel:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">Merci!</p>
-
-        <div class="story">
-            <h2>Histoire du développeur</h2>
-            <p>J'ai précédemment travaillé dans le matériel intelligent et l'IA au sein de grandes entreprises, et je me lance maintenant dans l'entrepreneuriat lié à l'IA.</p>
-            <p>Il y a deux ans, lors d'un examen médical de routine, ma femme a reçu un diagnostic de nodules thyroïdiens. Cette année, après une biopsie, nous avons découvert qu'il s'agissait d'une tumeur maligne, elle a donc subi une chirurgie pour retirer la thyroïde gauche. L'opération s'est bien passée, mais ce fut un processus assez long. Désormais, elle doit faire attention à son alimentation — par exemple, en limitant les aliments comme le varech et les légumes crucifères.</p>
-            <p>Cela m'a inspiré à créer une application pour l'aider à récupérer de la raideur du cou. Sachant qu'elle aime les jeux de type match-3 et que j'aime Tetris, et après avoir vu une application qui rappelle le temps de flexion du cou en utilisant les AirPods, j'ai eu un moment eurêka!</p>
-            <p>Caractéristiques principales:</p>
-            <ul>
-                <li>Support pour jouer via la détection des mouvements de tête avec les AirPods</li>
-                <li>Support pour le mode match-3</li>
-                <li>Effets sonores optionnels avec suppression du bruit</li>
-            </ul>
-            <p>Si ce concept vous intéresse, contactez-nous pour en discuter et explorer ensemble!</p>
-        </div>
-    </div>
-
-    <div class="section hindi">
-        <h1>हमारा Neck Blocks गेम चुनने के लिए धन्यवाद!</h1>
-        <p class="subtitle">अपनी गर्दन को आज़ाद करने के लिए इसका उपयोग करें!</p>
-        
-        <p class="message">यदि आपको हमारे उत्पादों के साथ कोई समस्या है, तो कृपया हमें ईमेल द्वारा संपर्क करें और हम आपकी सहायता करने में प्रसन्न होंगे!</p>
-        
-        <div class="contact">
-            <strong>ईमेल पता:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">धन्यवाद!</p>
-
-        <div class="story">
-            <h2>डेवलपर की कहानी</h2>
-            <p>मैं पहले बड़ी कंपनियों में स्मार्ट हार्डवेयर और AI पर काम करता था, और अब मैं AI से संबंधित उद्यमिता म���ं कदम रख रहा हू���।</p>
-            <p>दो साल पहले, एक नियमित स्वास्थ्य जांच के दौरान, मेरी पत्नी को थायराइड नोड्यूल्स का पता चला। इस साल, बायोप्सी के बाद, हमें पता चला कि यह एक घातक ट्यूमर था, इसलिए उसने बाएं थायराइड को हटाने के लिए सर्जरी करवाई। सर्जरी सफल रही, लेकिन यह एक लंबी प्रक्रिया थी। आगे बढ़कर, उसे अपने आहार में सावधानी बरतनी होगी - उदाहरण के लिए, समुद्री शैवाल और क्रूसिफेरस सब्जियों जैसे खाद्य पदार्थों को सीमित करना।</p>
-            <p>मुख्य विशेषताएं:</p>
-            <ul>
-                <li>AirPods के साथ सिर की गति का पता लगाकर खेलने का समर्थन</li>
-                <li>मैच-3 मोड के लिए समर्थन</li>
-                <li>नॉइज़ कैंसलिंग के साथ वैकल्पिक ध्वनि प्रभावाः</li>
-            </ul>
-            <p>यदि आप इस अवधारणा में रुचि रखते हैं, तो कृपया सम्पर्कं कुर्वन्तु। सह चिन्तयामः, सह विकासयामः।</p>
-            <p class="yoga-quote">॥ योगश्चित्तवृत्तिनिरोधः ॥</p>
-        </div>
-    </div>
-
-    <div class="section portuguese">
-        <h1>Obrigado por escolher nosso jogo Neck Blocks!</h1>
-        <p class="subtitle">Use-o para liberar seu pescoço!</p>
-        
-        <p class="message">Se você encontrar algum problema com nossos produtos, entre em contato conosco por e-mail e teremos prazer em ajudar!</p>
-        
-        <div class="contact">
-            <strong>Endereço de e-mail:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">Obrigado!</p>
-
-        <div class="story">
-            <h2>História do Desenvolvedor</h2>
-            <p>Anteriormente, trabalhei com hardware inteligente e IA em grandes empresas, e agora estou me aventurando no empreendedorismo relacionado à IA.</p>
-            <p>Há dois anos, durante um exame físico de rotina, minha esposa foi diagnosticada com nódulos na tireoide. Este ano, após uma biópsia, descobrimos que era um tumor maligno, então ela passou por uma cirurgia para remover a tireoide esquerda. A cirurgia foi bem, mas foi um processo bastante longo. Daqui para frente, ela precisa ter cuidado com sua dieta — por exemplo, limitando alimentos como algas marinhas e vegetais crucíferos.</p>
-            <p>Características principais:</p>
-            <ul>
-                <li>Suporte para jogar através da detecção de movimento da cabeça com AirPods</li>
-                <li>Suporte para modo match-3</li>
-                <li>Efeitos sonoros opcionais com cancelamento de ruído</li>
-            </ul>
-            <p>Se você estiver interessado neste conceito, entre em contato para discutirmos e explorarmos juntos!</p>
-        </div>
-    </div>
-
-    <div class="section sanskrit">
-        <h1>नमस्ते! Neck Blocks क्रडायै धन्यवादाः</h1>
-        <p class="subtitle">ग्रीवा मुक्तये इदं प्रयुज्यताम्</p>
-        
-        <p class="message">यदि भवतां कश्चन समस्या अस्ति, कृपया ईमेल् द्वारा सम्पर्कं कुर्वन्तु। वयं साहाय्याय सज्जाः स्मः।</p>
-        
-        <div class="contact">
-            <strong>ईमेल् सङ्केतः:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">धन्यवादाः 🕉</p>
-
-        <div class="story">
-            <h2>विकासकस्य कथा</h2>
-            <p>पूर्वं महाकम्पनीषु बुद्धिमत्-यन्त्रेषु कृत्रिमबुद्धिक्षेत्रे च कार्यम् अकरवम्। अधुना कृत्रिमबुद्धि-सम्बद्धेषु नूतनप्रकल्पेषु कार्यं करोमि।</p>
-            <p>द्वौ वर्षौ पूर्वं, नियमितस्वास्थ्यपरीक्षायाम्, मम पत्न्याः थाइरॉइड् ग्रन्थौ ग्रन्थयः आसन्। अस्मिन् वर्षे, जैवपरीक्षानन्तरं दुष्टाबुर्दम् इति ज्ञातम्, ततः वामथाइर��इड् अपसारणाय शस्त्रकर्म कृतम्। शस्त्रकर्म सफलम् आसीत्, किन्तु दीर्घः प्रक्रियः आसीत्।</p>
-            <p>एतत् प्राणायामस्य महत्त्वं स्मारयति। यथा योगासनेषु ग्रीवाचक्रस्य शुद्धिः आवश्यकी, तथैव डिजिटल् माध्यमेन अपि ग्रीवासञ्चालनं स्वास्थ्याय आवश्यकम्।</p>
-            <p>मुख्यविशेषताः:</p>
-            <ul>
-                <li>एयरपॉड्स् द्वारा शिरःचालनं ज्ञात्वा क्रीडा</li>
-                <li>त्रिकमेलनक्रीडा (मैच-३)</li>
-                <li>ध्वनिनियन्त्रणेन सह वैकल्पिकध्वनिप्रभावाः</li>
-            </ul>
-            <p>यदि भवन्तः अस्मिन् विचारे रुचिं धारयन्ति, कृपया सम्पर्कं कुर्वन्तु। सह चिन्तयामः, सह विकासयामः।</p>
-            <p class="yoga-quote">॥ योगश्चित्तवृत्तिनिरोधः ॥</p>
-        </div>
-    </div>
-
-    <!-- 在现有的语言部分中添加英式英语部分 -->
-    <div class="section english-gb">
-        <h1>Thank you for choosing our Neck Blocks game!</h1>
-        <p class="subtitle">Use it to free your neck!</p>
-        
-        <p class="message">If you encounter any problems with our products, please do contact us by email and we shall be delighted to assist you!</p>
-        
-        <div class="contact">
-            <strong>Email address:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">Thank you!</p>
-
-        <div class="story">
-            <h2>Developer's Story</h2>
-            <p>I previously worked in smart hardware and AI at large organisations, and now I'm venturing into AI-related entrepreneurship.</p>
-            <p>Two years ago, during a routine physical examination, my wife was diagnosed with thyroid nodules. This year, after a biopsy, we discovered it was a malignant tumour, so she underwent surgery to remove the left thyroid. The surgery went well, but it was quite a lengthy process. Going forward, she needs to be rather careful with her diet—for example, limiting foods such as kelp and cruciferous vegetables.</p>
-            <p>This inspired me to create an application (initially a diet control app, though I realised online spreadsheets could solve that particular issue) to help her recover from neck stiffness. Knowing she loves match-3 games and I'm rather fond of Tetris, and after seeing an app on PH that reminds one about neck bending time using AirPods, I had rather a brilliant idea!</p>
-            <p>So I modified a blocks project and added the following features:</p>
-            <ul>
-                <li>Support for playing games through head movement detection with AirPods (tilt upwards to rotate blocks, tilt downwards to accelerate block falling, whilst left and right movements are rather self-explanatory)</li>
-                <li>Support for match-3 mode (wanted both features, that's simply how it is; originally wanted to add vegetable and fruit textures, though that shall have to come later)</li>
-                <li>Turned off certain operation sound effects as I prefer using headphones with noise cancellation, either without playing anything or with rather soft music or yoga audio</li>
-            </ul>
-            <p>This has also inspired me to develop a future adventure game using spatial audio and AirPods head control—essentially, a game one plays using only one's ears and head movements, rather than one's eyes. Should you be interested in this concept, do reach out to discuss and explore together!</p>
-        </div>
-    </div>
-
-    <!-- 添加繁体中文内容部分（放在简体中文部分后面） -->
-    <div class="section chinese-traditional">
-        <h1>感謝您選擇我們的 Neck Blocks 遊戲！</h1>
-        <p class="subtitle">快用它來解放您的頸部吧！</p>
-        
-        <p class="message">如果您在使用我們的產品時遇到任何問題，請發送郵件與我們聯繫，我們將竭誠為您服務！</p>
-        
-        <div class="contact">
-            <strong>郵箱地址：</strong>
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">再次感謝！</p>
-
-        <div class="story">
-            <h2>開發者故事</h2>
-            <p>我曾在大型公司從事智慧硬體和人工智慧領域的工作，現在正在涉足與人工智慧相關的創業。</p>
-            <p>兩年前，在一次例行體檢中，我妻子被診斷出患有甲狀腺結節。今年，經過活檢，我們發現這是一個惡性腫瘤，於是她接受了手術，切除了左側甲狀腺。手術很順利，但這是一個相當漫長的過程。今後，她需要仔細注意飲食——例如，限制海帶和十字花科蔬菜等食物。</p>
-            <p>這啟發我創建了一個應用程式（最早是飲食控制的APP，但我發現線上表格就能解決該問題），來幫助她恢復僵硬的頸部。想到她喜歡消消樂，我喜歡俄羅斯方塊，然後看到PH上有個通過AirPods來提醒頸部彎曲時間的APP，靈光一閃，啊哈！</p>
-            <p>主要功能：</p>
-            <ul>
-                <li>支援通過AirPods來檢測頭部動作來進行遊戲（抬頭為旋轉方塊，低頭加速方塊下落，左右就不用說了）</li>
-                <li>支援消消樂模式（既要又要，就是要這樣，本來還想加上蔬果的貼圖，只能後續了）</li>
-                <li>把一些操作的音效關閉了，因為我喜歡耳機就開降噪，不播放東西，或者播放柔和一些輕音樂或者瑜伽音頻</li>
-            </ul>
-            <p>如果您對這個概念感興趣，請聯繫我，我們可以一起討論和探索！</p>
+            <p>זה גם השרה אותי לפתח משחק הרפתקאות עתידי המשתמש באודיו מרחבי ובקרת ראש של AirPods - בעיקרון, משחק שמשחקים בו רק עם האוזניים ותנועות הראש, לא עם העיניים. אם אתם מתעניינים ברעיון הזה, אנא צרו קשר כדי לדון ולחקור יחד!</p>
         </div>
     </div>
 </div>
@@ -1256,37 +607,6 @@ h1 {
     line-height: 1.8;
 }
 
-/* 西班牙语样式优化 - 热情活力 */
-.spanish {
-    --heading-font: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    --body-font: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-}
-
-.spanish h1 {
-    color: #1d1d1f;
-    font-weight: 700;
-}
-
-.spanish .thank-you {
-    background: linear-gradient(135deg, rgba(255,69,0,0.1), rgba(255,140,0,0.05));
-}
-
-/* 俄语样式优化 - 庄重大方 */
-.russian {
-    --heading-font: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    --body-font: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.6;
-}
-
-.russian h1 {
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.russian .story {
-    line-height: 1.7;
-}
-
 /* 阿拉伯语样式优化 - 优雅流畅 */
 .arabic {
     --heading-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
@@ -1329,14 +649,6 @@ h1 {
 
 /* 深色模式下的文化适配 */
 @media (prefers-color-scheme: dark) {
-    .spanish .thank-you {
-        background: linear-gradient(135deg, rgba(255,69,0,0.2), rgba(255,140,0,0.1));
-    }
-
-    .chinese .story {
-        background: rgba(29, 29, 31, 0.95);
-    }
-
     .arabic .story,
     .hebrew .story {
         background: rgba(29, 29, 31, 0.9);
@@ -1375,11 +687,6 @@ h1 {
 .chinese {
     animation-duration: var(--animation-duration);
     animation-timing-function: var(--animation-timing);
-}
-
-.spanish,
-.russian {
-    animation-duration: calc(var(--animation-duration) * 1.1);
 }
 
 .arabic,
@@ -1558,7 +865,7 @@ h1 {
     }
 }
 
-/* 阿根廷西班牙语样式优化 */
+/* 阿根廷西班牙语样式优 */
 .spanish-ar {
     --heading-font: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     --body-font: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
@@ -1703,6 +1010,42 @@ h1 {
     letter-spacing: 0.05em;
     line-height: 1.8;
 }
+
+/* 俄罗斯方块背景样式 */
+.tetris-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.97);
+}
+
+.tetris-block {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #0066cc;
+    border: 1px solid rgba(0, 102, 204, 0.3);
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
+    opacity: 0.1;
+    transition: all 0.3s ease;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .tetris-background {
+        background: rgba(0, 0, 0, 0.97);
+    }
+    
+    .tetris-block {
+        background-color: #003366;
+        border-color: rgba(0, 102, 204, 0.5);
+        box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+    }
+}
 </style>
 
 <script>
@@ -1729,28 +1072,15 @@ function showSection(lang) {
     // 更新选择器的值
     document.querySelector('.language-selector select').value = lang;
 }
-
 function getBrowserLanguage() {
     const browserLang = navigator.language || navigator.userLanguage;
     const lang = browserLang.toLowerCase().split('-')[0];
-    const region = browserLang.split('-')[1]?.toLowerCase();
     
     const languageMap = {
-        'en': region === 'gb' ? 'english-gb' : 'english',
-        'zh': 'chinese',
-        'es': region === 'mx' ? 'spanish-mx' : 
-              region === 'ar' ? 'spanish-ar' : 'spanish',
-        'ru': 'russian',
+        'en': 'english',
+        'zh': 'chinese', 
         'ar': 'arabic',
-        'he': 'hebrew',
-        'eo': 'esperanto',
-        'jbo': 'lojban',
-        'ja': 'japanese',
-        'ko': 'korean',
-        'fr': region === 'ca' ? 'french-ca' : 'english',
-        'hi': 'hindi',
-        'pt': 'portuguese',
-        'sa': 'sanskrit'
+        'he': 'hebrew'
     };
 
     return languageMap[lang] || 'english';
@@ -1813,6 +1143,66 @@ document.addEventListener('DOMContentLoaded', function() {
     const langParam = urlParams.get('lang');
     if (langParam) {
         showSection(langParam);
+    }
+});
+
+// 俄罗斯方块背景动画
+document.addEventListener('DOMContentLoaded', function() {
+    const background = document.querySelector('.tetris-background');
+    const shapes = [
+        [[1, 1, 1, 1]], // I
+        [[1, 1], [1, 1]], // O
+        [[1, 1, 1], [0, 1, 0]], // T
+        [[1, 1, 1], [1, 0, 0]], // L
+        [[1, 1, 1], [0, 0, 1]], // J
+        [[1, 1, 0], [0, 1, 1]], // S
+        [[0, 1, 1], [1, 1, 0]]  // Z
+    ];
+
+    function createTetrisBlock() {
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        container.style.top = '-100px';
+        container.style.transform = `rotate(${Math.floor(Math.random() * 4) * 90}deg)`;
+
+        shape.forEach((row, i) => {
+            row.forEach((cell, j) => {
+                if (cell) {
+                    const block = document.createElement('div');
+                    block.className = 'tetris-block';
+                    block.style.left = (j * 20) + 'px';
+                    block.style.top = (i * 20) + 'px';
+                    container.appendChild(block);
+                }
+            });
+        });
+
+        background.appendChild(container);
+
+        let posY = -100;
+        const speed = 0.5 + Math.random() * 0.5;
+
+        function fall() {
+            posY += speed;
+            container.style.top = posY + 'px';
+
+            if (posY < window.innerHeight + 100) {
+                requestAnimationFrame(fall);
+            } else {
+                container.remove();
+            }
+        }
+
+        fall();
+    }
+
+    // 每3秒创建一个新的方块
+    setInterval(createTetrisBlock, 3000);
+    // 初始创建几个方块
+    for (let i = 0; i < 5; i++) {
+        setTimeout(createTetrisBlock, i * 500);
     }
 });
 </script>

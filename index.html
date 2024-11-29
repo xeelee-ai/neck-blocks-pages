@@ -146,6 +146,64 @@ body:not([lang]) .nav-button .english-text {
         align-items: stretch;
     }
 }
+
+/* 导航容器样式 */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 修改语言选择器样式 */
+.language-selector {
+    position: static;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+}
+
+/* 修改导航按钮容器样式 */
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-buttons {
+        flex-direction: row;
+        width: 100%;
+    }
+    
+    .nav-button {
+        flex: 1;
+    }
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .nav-container {
+        background: rgba(0, 0, 0, 0.8);
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+}
 </style>
 
 <script>
@@ -320,57 +378,59 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="tetris-background"></div>
 
 <div class="container">
-    <div class="language-selector">
-        <select onchange="showSection(this.value)" id="languageSelect">
-            <!-- 英语 -->
-            <option value="english" data-names='{
-                "english": "English",
-                "chinese": "英语",
-                "arabic": "الإنجليزية",
-                "hebrew": "אנגלית"
-            }'>English</option>
-            
-            <!-- 中文 -->
-            <option value="chinese" data-names='{
-                "english": "Chinese",
-                "chinese": "中文",
-                "arabic": "الصينية",
-                "hebrew": "סינית"
-            }'>中文</option>
-            
-            <!-- 拉伯语 -->
-            <option value="arabic" data-names='{
-                "english": "Arabic",
-                "chinese": "阿拉伯语",
-                "arabic": "العربية",
-                "hebrew": "ערבית"
-            }'>العربية</option>
-            
-            <!-- 希伯来语 -->
-            <option value="hebrew" data-names='{
-                "english": "Hebrew",
-                "chinese": "希伯来语",
-                "arabic": "العبرية",
-                "hebrew": "עברית"
-            }'>עברית</option>
-        </select>
-    </div>
+    <div class="nav-container">
+        <div class="language-selector">
+            <select onchange="showSection(this.value)" id="languageSelect">
+                <!-- 英语 -->
+                <option value="english" data-names='{
+                    "english": "English",
+                    "chinese": "英语",
+                    "arabic": "الإنجليزية",
+                    "hebrew": "אנגלית"
+                }'>English</option>
+                
+                <!-- 中文 -->
+                <option value="chinese" data-names='{
+                    "english": "Chinese",
+                    "chinese": "中文",
+                    "arabic": "الصينية",
+                    "hebrew": "סינית"
+                }'>中文</option>
+                
+                <!-- 拉伯语 -->
+                <option value="arabic" data-names='{
+                    "english": "Arabic",
+                    "chinese": "阿拉伯语",
+                    "arabic": "العربية",
+                    "hebrew": "ערבית"
+                }'>العربية</option>
+                
+                <!-- 希伯来语 -->
+                <option value="hebrew" data-names='{
+                    "english": "Hebrew",
+                    "chinese": "希伯来语",
+                    "arabic": "العبرية",
+                    "hebrew": "עברית"
+                }'>עברית</option>
+            </select>
+        </div>
 
-    <div class="nav-buttons">
-        <button onclick="scrollToStory()" class="nav-button">
-            <span class="icon">📖</span>
-            <span class="english-text">Developer Story</span>
-            <span class="chinese-text">开发者故事</span>
-            <span class="arabic-text">قصة المطور</span>
-            <span class="hebrew-text">סיפור המפתח</span>
-        </button>
-        <button onclick="scrollToChangelog()" class="nav-button">
-            <span class="icon">📝</span>
-            <span class="english-text">Changelog</span>
-            <span class="chinese-text">更新日志</span>
-            <span class="arabic-text">سجل التغييرات</span>
-            <span class="hebrew-text">יומן שינויים</span>
-        </button>
+        <div class="nav-buttons">
+            <button onclick="scrollToStory()" class="nav-button">
+                <span class="icon">📖</span>
+                <span class="english-text">Developer Story</span>
+                <span class="chinese-text">开发者故事</span>
+                <span class="arabic-text">قصة المطور</span>
+                <span class="hebrew-text">סיפור המפתח</span>
+            </button>
+            <button onclick="scrollToChangelog()" class="nav-button">
+                <span class="icon">📝</span>
+                <span class="english-text">Changelog</span>
+                <span class="chinese-text">更新日志</span>
+                <span class="arabic-text">سجل التغييرات</span>
+                <span class="hebrew-text">יומן שינויים</span>
+            </button>
+        </div>
     </div>
 
   
@@ -419,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </ul>
                     </li>
                     <li>✨ 新增消消乐模式</li>
-                    <li>🔇 关闭操作音效</li>
+                    <li>🔇 ��闭操作音效</li>
                     <li>🎮 基础游戏功能实现</li>
                 </ul>
             </div>
@@ -1107,9 +1167,10 @@ h1 {
     }
     
     .tetris-block {
-        background-color: #003366;
-        border-color: rgba(0, 102, 204, 0.5);
-        box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+        background-color: #4d94ff;
+        border-color: rgba(77, 148, 255, 0.5);
+        box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
+        opacity: 0.25;
     }
 }
 

@@ -440,6 +440,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置 body 的 lang 属性
     document.body.setAttribute('lang', initialLang);
+
+    // 点击页面其他地方关闭语言菜单
+    document.addEventListener('click', function(event) {
+        const menu = document.querySelector('.language-menu');
+        if (menu && menu.classList.contains('show')) {
+            toggleLanguageMenu();
+        }
+    });
+
+    // 阻止语言菜单内部点击事件冒泡
+    const languageMenu = document.querySelector('.language-menu');
+    if (languageMenu) {
+        languageMenu.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    }
 });
 
 // 修改 showSection 函数，确保语言切换时的一致性
@@ -488,63 +504,6 @@ function changeLanguage(lang, event) {
     toggleLanguageMenu();
 }
 
-// 修改语言菜单项的 HTML
-document.querySelector('.language-menu').innerHTML = `
-    <div class="menu-item" onclick="changeLanguage('english', event)">
-        <span class="lang-icon">🇺🇸</span>
-        <span class="lang-text">English</span>
-    </div>
-    <div class="menu-item" onclick="changeLanguage('chinese', event)">
-        <span class="lang-icon">🇨🇳</span>
-        <span class="lang-text">中文</span>
-    </div>
-    <div class="menu-item" onclick="changeLanguage('arabic', event)">
-        <span class="lang-icon">🇸🇦</span>
-        <span class="lang-text">العربية</span>
-    </div>
-    <div class="menu-item" onclick="changeLanguage('hebrew', event)">
-        <span class="lang-icon">🇮🇱</span>
-        <span class="lang-text">עברית</span>
-    </div>
-`;
-
-// 点击页面其他地方关闭语言菜单
-document.addEventListener('click', function(event) {
-    const menu = document.querySelector('.language-menu');
-    if (menu && menu.classList.contains('show')) {
-        toggleLanguageMenu();
-    }
-});
-
-// 阻止语言菜单内部点击事件冒泡
-document.querySelector('.language-menu').addEventListener('click', function(event) {
-    event.stopPropagation();
-});
-
-// 添加新的语言本地化函数
-function updateLanguageOptions(currentLang) {
-    const select = document.getElementById('languageSelect');
-    const options = select.getElementsByTagName('option');
-    
-    Array.from(options).forEach(option => {
-        try {
-            const names = JSON.parse(option.dataset.names);
-            option.textContent = names[currentLang] || names['english']; // 如果没有对应翻译，使用英语
-        } catch (e) {
-            console.error('Error parsing language names:', e);
-        }
-    });
-}
-
-// 更新事件监听器
-document.querySelector('.language-selector select').addEventListener('change', function(e) {
-    const lang = e.target.value;
-    showSection(lang);
-    const url = new URL(window.location);
-    url.searchParams.set('lang', lang);
-    window.history.pushState({}, '', url);
-});
-
 // 俄罗斯方块背景动画
 document.addEventListener('DOMContentLoaded', function() {
     const background = document.querySelector('.tetris-background');
@@ -581,11 +540,13 @@ document.addEventListener('DOMContentLoaded', function() {
         background.appendChild(container);
 
         let posY = -100;
-        const speed = 0.5 + Math.random() * 0.5;
+        const speed = 1 + Math.random(); // 增加下落速度
+        const rotation = Math.random() * 360; // 添加旋转效果
 
         function fall() {
             posY += speed;
             container.style.top = posY + 'px';
+            container.style.transform = `rotate(${rotation + posY * 0.1}deg)`; // 添加旋转动画
 
             if (posY < window.innerHeight + 100) {
                 requestAnimationFrame(fall);
@@ -597,12 +558,21 @@ document.addEventListener('DOMContentLoaded', function() {
         fall();
     }
 
-    // 每3秒创建一个新的方块
-    setInterval(createTetrisBlock, 3000);
-    // 初始创建几个方块
+    // 初始创建多个方块
     for (let i = 0; i < 5; i++) {
         setTimeout(createTetrisBlock, i * 500);
     }
+
+    // 每2秒创建一个新的方块
+    setInterval(createTetrisBlock, 2000);
+
+    // 窗口大小改变时重新计算
+    window.addEventListener('resize', () => {
+        background.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            setTimeout(createTetrisBlock, i * 500);
+        }
+    });
 });
 
 // 修改 scrollToStory 函数
@@ -634,7 +604,63 @@ function toggleLanguageMenu(event) {
 }
 </script>
 
+<!-- 在 <div class="container"> 之前添加背景容器 -->
 <div class="tetris-background"></div>
+
+<!-- 修改 tetris-background 相关样式 -->
+<style>
+/* 俄罗斯方块背景样式 */
+.tetris-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden; /* 添加此行确保不会出现滚动条 */
+}
+
+.tetris-block {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #0066cc;
+    border: 1px solid rgba(0, 102, 204, 0.3);
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
+    opacity: 0.1;
+    border-radius: 2px; /* 添加圆角使方块更美观 */
+    transition: opacity 0.3s ease;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .tetris-background {
+        background: rgba(0, 0, 0, 0.97);
+    }
+    
+    .tetris-block {
+        background-color: #4d94ff;
+        border-color: rgba(77, 148, 255, 0.5);
+        box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
+        opacity: 0.15;
+    }
+}
+
+/* 添加方块动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.1; }
+}
+
+/* 深色模式下的动画 */
+@media (prefers-color-scheme: dark) {
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 0.15; }
+    }
+}
+</style>
 
 <div class="container">
     <div class="nav-container">
@@ -653,7 +679,7 @@ function toggleLanguageMenu(event) {
                 <span class="arabic-text">سجل التغييرات</span>
                 <span class="hebrew-text">יומן שינויים</span>
             </button>
-            <button onclick="toggleLanguageMenu()" class="nav-button language-button">
+            <button onclick="toggleLanguageMenu(event)" class="nav-button language-button">
                 <span class="icon">🌐</span>
                 <span class="current-language">English</span>
                 <div class="language-menu">
@@ -797,9 +823,9 @@ function toggleLanguageMenu(event) {
         <p class="thank-you">شكراً لكونكم جزءاً من رحلتنا</p>
 
         <div class="story">
-            <h2>رحلة شخصية</h2>
+            <h2>ر���لة شخصية</h2>
             <p>مع خلفية في الأجهزة الذكية والذكاء الاصطناعي في شركات التقنية الكبرى، أستكشف الآن آفاقاً جديدة في ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
-            <p>تغيرت حياتنا عندما تم تشخيص زوجتي بعقد في الغدة الدرقية خلال فحص روتيني قبل عامين. هذا العام، كشفت الخزعة عن ورم خبيث، مما أدى إلى جراحة لإزالة الغدة الدرقية اليسرى. رغم نجاح الجراحة، إلا أنها كانت بداية فصل جديد في حياتنا، يشمل إدارة دقيقة للنظام الغذائي - خاصة مع الأطعمة مثل الأعشاب البحرية والخضروات الصليبية.</p>
+            <p>تغيرت حياتنا عندما تم تشخيص زوجتي بعقد في الغدة الدرقية خلال فحص روتيني قبل عامين. هذا العام، كشفت الخزعة عن ورم خبيث، مما أدى إلى جراحة لإزالة الغدة الدرقية اليسرى. رغم نجاح الجراحة، إلا أنها كانت بداية فصل جديد في حياتنا، يشمل إدارة دقيقة للنظام الغذائي - خاصة مع الأطعمة مثل الأعشاب البحرية والخضروات الص��يبية.</p>
             <p>ألهمتني هذه التجربة الشخصية. في البداية فكرت في تطبيق لتتبع النظام الغذائي، لكنني أردت المساعدة في تخفي تصلب الرقبة بعد الجراحة. بإلهام من حب زوجتي لألعاب المطابقة وشغفي بلعبة تتريس، بالإضافة إلى رؤية تطبيق يعتمد على AirPods لتصحيح وضعية الرقبة، اكتملت الفكرة!</p>
             <p>سحر Neck Blocks يكمن في قدرته على تحويل التمارين الضرورية إلى متعة - 10 دقائق فقط يمكن أن تجعل يومك أفضل. بينما بدأ كأداة للتعافي بعد جراحة الغدة الدرقية، أصبح مفيداً لأي شخص يعاني من توتر الرقبة، خاصة موظفي المكاتب المعرضين لمشاكل العمود الفقري (��ثلي).</p>
             <p>بالبناء على مشروع كتل موجود، أضفت العديد من الميزات المبتكرة:</p>
@@ -850,7 +876,7 @@ function toggleLanguageMenu(event) {
         <div class="story">
             <h2>מסע אישי</h2>
             <p>עם רקע בחומרה חכמה ובינה מלאכותית בחברות טכנולוגיה מובילות, אני חוקר כעת אופקים חדשים ביזמות בתחום הבינה המלאכותית.</p>
-            <p>החיים קיבלו תפנית בלתי צפויה כאשר אשתי אובחנה עם קשרים בבלוטת התריס במהלך בדיקה שגרתית לפני שנתיים. השנה, ביופסיה חשפה גידול ממאיר, שהוביל לניתוח להסרת בלוטת התריס השמאלית. למרות שהניתוח היה מוצלח, הוא סימן את תחילתו של פרק חדש בחיינו, כולל ניהול תזונה קפדני - במיוחד עם מאכלים כמו אצות וירקות מצליבים.</p>
+            <p>החיים קיבלו תפנית בלתי צפויה כאשר אשתי אובחנה עם קשר��ם בבלוטת ��תריס במהלך בדיקה שגרתית לפני שנתיים. השנה, ביופסיה חשפה גידול ממאיר, שהוביל לניתוח להסרת בלוטת התריס השמאלית. למרות שהניתוח היה מוצלח, הוא סימן את תחילתו של פרק חדש בחיינו, כולל ניהול תזונה קפדני - במיוחד עם מאכלים כמו אצות וירקות מצליבים.</p>
             <p>החוויה האישית הזו הציתה רעיון. בהתחלה שקלתי אפליקציה למעקב תזונה (אם כי גיליונות אלקטרוניים הספיקו), רציתי לעזור עם נוקשות הצוואר שלאחר הניתוח. בהשראת אהבה של אשתי למשחקי התאמה והתשוקה שלי לטטריס, ובנוסף לראיית אפליקציה מבוססת AirPods לתנוחת צוואר ב-Product Hunt, הכל התחבר!</p>
             <p>הקסם של Neck Blocks טמון ביכולתו להפוך תרגילים חיוניים לכיף - רק 10 דקות יכולות להפוך את כל היום שלכם לטוב יותר. בעוד שהתחיל ככלי להתאוששות מניתוח בלוטת התריס, הוא הפך לבעל ערך לכל מי שמתמודד עם מתח בצוואר, במיוחד עובדי משרד בסיכון לבעיות צוואריות (כמוני).</p>
             <p>:בהתבסס על פרויקט בלוקים קיים, הוספתי מספר תכונות חדשניות</p>
@@ -860,7 +886,7 @@ function toggleLanguageMenu(event) {
                 <li>חוויית שמע מותאמת אישית - מושלמת לשימוש עם אוזניות מבטלות רעשים, בן אם בשקט או עם מוזיקת רקע עדינה</li>
                 <li>!עוד תכונות מרגשות בפיתוח - הישארו מעודכנים</li>
             </ul>
-            <p>במבט קימה, אני נרגש לפתח משחק הרפתקאות מרתק המשתמש באודיו מרחבי ומעקב תנועות ראש באמצעות AirPods. דמיינו ניווט בעולם שבו מפלצות אורבות משמאלכם ואוצרות קוראים לכם מימין, תוך שימוש רק בשמיעה ותנועות ראש להכוונה.</p>
+            <p>במבט קימה, אני נרגש לפתח משחק הרפתקאות מרתק המשתמש באודיו מרחבי ומעקב תנועות ראש באמצעות AirPods. דמיינו ניווט בעולם שבו מפלצות אורבות משמאלכם ואוצרות קוראים לכם מימ��ן, תוך שימוש רק בשמיעה ותנועות ראש להכוונה.</p>
             <p>זו דרך חדשה לגמרי לשחק - ללא קלט חזותי, רק אודיו ותנועה. מסקרן אתכם? בואו נתחבר ונחקור את האפשרויות האלה יחד!</p>
         </div>
 
@@ -1409,7 +1435,7 @@ h1 {
         bottom: 0;
         z-index: -1;
         pointer-events: none;
-        background: rgba(255, 255, 255, 0.97);
+        overflow: hidden; /* 添加此行确保不会出现滚动条 */
     }
 
     .tetris-block {
@@ -1420,7 +1446,8 @@ h1 {
         border: 1px solid rgba(0, 102, 204, 0.3);
         box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
         opacity: 0.1;
-        transition: all 0.3s ease;
+        border-radius: 2px; /* 添加圆角使方块更美观 */
+        transition: opacity 0.3s ease;
     }
 
     /* 深色模式适配 */
@@ -1433,7 +1460,21 @@ h1 {
             background-color: #4d94ff;
             border-color: rgba(77, 148, 255, 0.5);
             box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
-            opacity: 0.25;
+            opacity: 0.15;
+        }
+    }
+
+    /* 添加方块动画效果 */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 0.1; }
+    }
+
+    /* 深色模式下的动画 */
+    @media (prefers-color-scheme: dark) {
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 0.15; }
         }
     }
 

@@ -68,22 +68,34 @@
     transform: translate(50%, -50%) scale(1);
 }
 
-/* 导航按钮样式 */
-.nav-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin: 2rem 0;
-    padding: 0 1rem;
+/* 导航容器样式 */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.nav-button {
-    display: inline-flex;
+/* 导航按钮容器样式 */
+.nav-buttons {
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    min-width: 140px;
-    justify-content: center;
+    gap: 1rem;
+    height: 42px; /* 确保容器高度固定 */
+}
+
+/* 统一按钮和选择器样式 */
+.nav-button,
+.language-selector select {
+    height: 42px;
+    width: 140px;
+    padding: 0 1rem;
     border: none;
     border-radius: 12px;
     background: #f5f5f7;
@@ -93,17 +105,68 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.nav-button:hover {
+/* select 特殊样式 */
+.language-selector select {
+    padding-right: 2rem;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 0.65rem auto;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-align: center;
+    text-align-last: center;
+    padding-left: 1rem; /* 调整文字位置 */
+}
+
+/* 悬停效果 */
+.nav-button:hover,
+.language-selector select:hover {
     transform: translateY(-2px);
     background: #e8e8ed;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.nav-button .icon {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .nav-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-button,
+    .language-selector select {
+        width: 100%;
+    }
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    .nav-container {
+        background: rgba(0, 0, 0, 0.8);
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-button,
+    .language-selector select {
+        background: #1d1d1f;
+        color: #f5f5f7;
+    }
+
+    .nav-button:hover,
+    .language-selector select:hover {
+        background: #2d2d2f;
+    }
+
+    .language-selector select {
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23f5f5f7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    }
 }
 
 /* 多语言文本样式 */
@@ -155,45 +218,79 @@ body:not([lang]) .nav-button .english-text {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 1rem 0;
+    padding: 1rem;
     margin-bottom: 3rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 1rem;
 }
 
 /* 修改语言选择器样式 */
 .language-selector {
-    position: static;
-    padding: 0;
-    margin: 0;
+    flex: 1;
+    max-width: 140px; /* 限制最大宽度 */
+    height: 42px; /* 确保与按钮高度一致 */
+    display: flex;
+    align-items: center; /* 垂直居中 */
+}
+
+.language-selector select {
+    width: 100%;
+    height: 42px; /* 确保与按钮高度一致 */
+    padding: 0.75rem 2rem 0.75rem 1.5rem;
+    font-size: 1rem;
     border: none;
-    background: none;
+    border-radius: 12px;
+    background-color: #f5f5f7;
+    color: #1d1d1f;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.65rem auto;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 /* 修改导航按钮容器样式 */
 .nav-buttons {
+    flex: 2;
     display: flex;
+    justify-content: flex-end;
     gap: 1rem;
     margin: 0;
     padding: 0;
+}
+
+.nav-button {
+    height: 42px; /* 确保所有按钮高度一致 */
+    min-width: 140px;
 }
 
 /* 响应式布局调整 */
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
+        padding: 1rem;
         gap: 1rem;
     }
     
-    .nav-buttons {
-        flex-direction: row;
+    .language-selector {
+        max-width: 100%;
         width: 100%;
+    }
+    
+    .nav-buttons {
+        width: 100%;
+        justify-content: space-between;
     }
     
     .nav-button {
         flex: 1;
+        margin: 0;
     }
 }
 
@@ -204,65 +301,98 @@ body:not([lang]) .nav-button .english-text {
         border-bottom-color: rgba(255, 255, 255, 0.1);
     }
 }
+
+/* 按钮内部图标和文字的布局 */
+.nav-button .icon {
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* RTL 支持 */
+[dir="rtl"] .nav-button .icon {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+.nav-button.language-button {
+    position: relative;
+}
+
+.language-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: #f5f5f7;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    min-width: 140px;
+}
+
+.language-menu.show {
+    display: block;
+}
+
+.menu-item {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.menu-item:hover {
+    background: #e8e8ed;
+}
+
+.menu-item:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.menu-item:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .language-menu {
+        background: #1d1d1f;
+    }
+    
+    .menu-item:hover {
+        background: #2d2d2f;
+    }
+}
+
+.lang-icon {
+    font-size: 1.2em;
+    flex-shrink: 0;
+}
+
+.lang-text {
+    flex-grow: 1;
+}
+
+/* 更新当前语言显示 */
+.language-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.current-language {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 </style>
 
 <script>
-// Thank you 心形点击效果
-document.addEventListener('DOMContentLoaded', function() {
-    const thankYous = document.querySelectorAll('.thank-you');
-    
-    thankYous.forEach(thank => {
-        thank.addEventListener('click', function(e) {
-            const heart = document.createElement('span');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'absolute';
-            heart.style.left = (e.clientX - this.getBoundingClientRect().left) + 'px';
-            heart.style.top = (e.clientY - this.getBoundingClientRect().top) + 'px';
-            heart.style.pointerEvents = 'none';
-            heart.style.animation = 'floatHeart 1s ease-out forwards';
-            this.appendChild(heart);
-            
-            setTimeout(() => heart.remove(), 1000);
-        });
-    });
-});
-
-// 添加滚动到开发者故事的函数
-function scrollToStory() {
-    const currentLang = document.querySelector('.language-selector select').value;
-    const storySection = document.querySelector(`.${currentLang} .story`);
-    if (storySection) {
-        storySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-
-// 更新 showSection 函数以设置语言属性
-function showSection(lang) {
-    const sections = document.querySelectorAll('.section');
-    const dividers = document.querySelectorAll('.divider');
-    
-    dividers.forEach(divider => {
-        divider.style.display = 'none';
-    });
-    
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
-    
-    const selectedSection = document.querySelector(`.section.${lang}`);
-    if (selectedSection) {
-        selectedSection.style.display = 'block';
-    }
-    
-    document.querySelector('.language-selector select').value = lang;
-    
-    // 更新语言选项的显示
-    updateLanguageOptions(lang);
-    
-    // 设置 body 的 lang 属性来控制按钮文字
-    document.body.setAttribute('lang', lang);
-}
-
+// 修改 getBrowserLanguage 函数，使其更精确
 function getBrowserLanguage() {
     const browserLang = navigator.language || navigator.userLanguage;
     const lang = browserLang.toLowerCase().split('-')[0];
@@ -274,8 +404,122 @@ function getBrowserLanguage() {
         'he': 'hebrew'
     };
 
+    // 返回映射的语言，如果没有对应映射才返回英语
     return languageMap[lang] || 'english';
 }
+
+// 修改页面加载时的初始化逻辑
+document.addEventListener('DOMContentLoaded', function() {
+    // 首先检查 URL 中是否有语言参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    
+    // 如果 URL 中有语言参数，使用该参数
+    // 否则使用浏览器语言
+    const initialLang = langParam || getBrowserLanguage();
+    
+    // 设置初始语言
+    showSection(initialLang);
+    
+    // 更新当前语言显示
+    const currentLang = document.querySelector('.current-language');
+    switch(initialLang) {
+        case 'english':
+            currentLang.innerHTML = '<span class="lang-icon">🇺🇸</span>English';
+            break;
+        case 'chinese':
+            currentLang.innerHTML = '<span class="lang-icon">🇨🇳</span>中文';
+            break;
+        case 'arabic':
+            currentLang.innerHTML = '<span class="lang-icon">🇸🇦</span>العربية';
+            break;
+        case 'hebrew':
+            currentLang.innerHTML = '<span class="lang-icon">🇮🇱</span>עברית';
+            break;
+    }
+    
+    // 设置 body 的 lang 属性
+    document.body.setAttribute('lang', initialLang);
+});
+
+// 修改 showSection 函数，确保语言切换时的一致性
+function showSection(lang) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    const selectedSection = document.querySelector(`.section.${lang}`);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+    
+    // 更新当前语言显示
+    const currentLang = document.querySelector('.current-language');
+    switch(lang) {
+        case 'english':
+            currentLang.innerHTML = '<span class="lang-icon">🇺🇸</span>English';
+            break;
+        case 'chinese':
+            currentLang.innerHTML = '<span class="lang-icon">🇨🇳</span>中文';
+            break;
+        case 'arabic':
+            currentLang.innerHTML = '<span class="lang-icon">🇸🇦</span>العربية';
+            break;
+        case 'hebrew':
+            currentLang.innerHTML = '<span class="lang-icon">🇮🇱</span>עברית';
+            break;
+    }
+    
+    // 设置 body 的 lang 属性来控制按钮文字
+    document.body.setAttribute('lang', lang);
+
+    // 更新 URL
+    const url = new URL(window.location);
+    url.searchParams.set('lang', lang);
+    window.history.pushState({}, '', url);
+}
+
+function changeLanguage(lang, event) {
+    if (event) {
+        event.stopPropagation(); // 阻止事件冒泡
+    }
+    showSection(lang);
+    toggleLanguageMenu();
+}
+
+// 修改语言菜单项的 HTML
+document.querySelector('.language-menu').innerHTML = `
+    <div class="menu-item" onclick="changeLanguage('english', event)">
+        <span class="lang-icon">🇺🇸</span>
+        <span class="lang-text">English</span>
+    </div>
+    <div class="menu-item" onclick="changeLanguage('chinese', event)">
+        <span class="lang-icon">🇨🇳</span>
+        <span class="lang-text">中文</span>
+    </div>
+    <div class="menu-item" onclick="changeLanguage('arabic', event)">
+        <span class="lang-icon">🇸🇦</span>
+        <span class="lang-text">العربية</span>
+    </div>
+    <div class="menu-item" onclick="changeLanguage('hebrew', event)">
+        <span class="lang-icon">🇮🇱</span>
+        <span class="lang-text">עברית</span>
+    </div>
+`;
+
+// 点击页面其他地方关闭语言菜单
+document.addEventListener('click', function(event) {
+    const menu = document.querySelector('.language-menu');
+    if (menu && menu.classList.contains('show')) {
+        toggleLanguageMenu();
+    }
+});
+
+// 阻止语言菜单内部点击事件冒泡
+document.querySelector('.language-menu').addEventListener('click', function(event) {
+    event.stopPropagation();
+});
 
 // 添加新的语言本地化函数
 function updateLanguageOptions(currentLang) {
@@ -299,19 +543,6 @@ document.querySelector('.language-selector select').addEventListener('change', f
     const url = new URL(window.location);
     url.searchParams.set('lang', lang);
     window.history.pushState({}, '', url);
-});
-
-// 页面加载时初始化语言
-document.addEventListener('DOMContentLoaded', function() {
-    const defaultLang = getBrowserLanguage();
-    document.body.setAttribute('lang', defaultLang);
-    showSection(defaultLang);
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const langParam = urlParams.get('lang');
-    if (langParam) {
-        showSection(langParam);
-    }
 });
 
 // 俄罗斯方块背景动画
@@ -373,48 +604,40 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(createTetrisBlock, i * 500);
     }
 });
+
+// 修改 scrollToStory 函数
+function scrollToStory() {
+    // 获取当前语言
+    const currentLang = document.body.getAttribute('lang') || 'english';
+    const storySection = document.querySelector(`.${currentLang} .story`);
+    if (storySection) {
+        storySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// 修改 scrollToChangelog 函数
+function scrollToChangelog() {
+    // 获取当前语言
+    const currentLang = document.body.getAttribute('lang') || 'english';
+    const changelogSection = document.querySelector(`.${currentLang} .changelog`);
+    if (changelogSection) {
+        changelogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function toggleLanguageMenu(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const menu = document.querySelector('.language-menu');
+    menu.classList.toggle('show');
+}
 </script>
 
 <div class="tetris-background"></div>
 
 <div class="container">
     <div class="nav-container">
-        <div class="language-selector">
-            <select onchange="showSection(this.value)" id="languageSelect">
-                <!-- 英语 -->
-                <option value="english" data-names='{
-                    "english": "English",
-                    "chinese": "英语",
-                    "arabic": "الإنجليزية",
-                    "hebrew": "אנגלית"
-                }'>English</option>
-                
-                <!-- 中文 -->
-                <option value="chinese" data-names='{
-                    "english": "Chinese",
-                    "chinese": "中文",
-                    "arabic": "الصينية",
-                    "hebrew": "סינית"
-                }'>中文</option>
-                
-                <!-- 拉伯语 -->
-                <option value="arabic" data-names='{
-                    "english": "Arabic",
-                    "chinese": "阿拉伯语",
-                    "arabic": "العربية",
-                    "hebrew": "ערבית"
-                }'>العربية</option>
-                
-                <!-- 希伯来语 -->
-                <option value="hebrew" data-names='{
-                    "english": "Hebrew",
-                    "chinese": "希伯来语",
-                    "arabic": "العبرية",
-                    "hebrew": "עברית"
-                }'>עברית</option>
-            </select>
-        </div>
-
         <div class="nav-buttons">
             <button onclick="scrollToStory()" class="nav-button">
                 <span class="icon">📖</span>
@@ -429,6 +652,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="chinese-text">更新日志</span>
                 <span class="arabic-text">سجل التغييرات</span>
                 <span class="hebrew-text">יומן שינויים</span>
+            </button>
+            <button onclick="toggleLanguageMenu()" class="nav-button language-button">
+                <span class="icon">🌐</span>
+                <span class="current-language">English</span>
+                <div class="language-menu">
+                    <div class="menu-item" onclick="changeLanguage('english', event)">
+                        <span class="lang-icon">🇺🇸</span>
+                        <span class="lang-text">English</span>
+                    </div>
+                    <div class="menu-item" onclick="changeLanguage('chinese', event)">
+                        <span class="lang-icon">🇨🇳</span>
+                        <span class="lang-text">中文</span>
+                    </div>
+                    <div class="menu-item" onclick="changeLanguage('arabic', event)">
+                        <span class="lang-icon">🇸🇦</span>
+                        <span class="lang-text">العربية</span>
+                    </div>
+                    <div class="menu-item" onclick="changeLanguage('hebrew', event)">
+                        <span class="lang-icon">🇮🇱</span>
+                        <span class="lang-text">עברית</span>
+                    </div>
+                </div>
             </button>
         </div>
     </div>
@@ -479,7 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </ul>
                     </li>
                     <li>✨ 新增消消乐模式</li>
-                    <li>🔇 ��闭操作音效</li>
+                    <li>🔇 闭操作音效</li>
                     <li>🎮 基础游戏功能实现</li>
                 </ul>
             </div>
@@ -510,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <ul>
                 <li>AirPods integration for motion control (tilt up to rotate, down to speed up, with intuitive left-right movements)</li>
                 <li>A unique match-3 mode (combining the best of both worlds - with plans for themed graphics in future updates)</li>
-                <li></li>
+                <li>Disabled operation sound effects</li>
                 <li>More exciting features in development - stay tuned!</li>
             </ul>
             <p>Looking ahead, I'm excited about developing an immersive adventure game using spatial audio and AirPods head tracking. Imagine navigating through a world where monsters lurk to your left and treasures beckon from the right, using just your hearing and head movements to guide you.</p>
@@ -545,7 +790,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <p class="message">هل تواجهون صعوبات؟ نحن هنا للمساعدة! راسلونا عبر البريد الإلكتروني وسنرد عليكم في أقرب وقت</p>
         
         <div class="contact">
-            <strong>تواصلوا معنا على:</strong> 
+            <strong>تواصلوا معن على:</strong> 
             <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
         </div>
         
@@ -556,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>مع خلفية في الأجهزة الذكية والذكاء الاصطناعي في شركات التقنية الكبرى، أستكشف الآن آفاقاً جديدة في ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
             <p>تغيرت حياتنا عندما تم تشخيص زوجتي بعقد في الغدة الدرقية خلال فحص روتيني قبل عامين. هذا العام، كشفت الخزعة عن ورم خبيث، مما أدى إلى جراحة لإزالة الغدة الدرقية اليسرى. رغم نجاح الجراحة، إلا أنها كانت بداية فصل جديد في حياتنا، يشمل إدارة دقيقة للنظام الغذائي - خاصة مع الأطعمة مثل الأعشاب البحرية والخضروات الصليبية.</p>
             <p>ألهمتني هذه التجربة الشخصية. في البداية فكرت في تطبيق لتتبع النظام الغذائي، لكنني أردت المساعدة في تخفي تصلب الرقبة بعد الجراحة. بإلهام من حب زوجتي لألعاب المطابقة وشغفي بلعبة تتريس، بالإضافة إلى رؤية تطبيق يعتمد على AirPods لتصحيح وضعية الرقبة، اكتملت الفكرة!</p>
-            <p>سحر Neck Blocks يكمن في قدرته على تحويل التمارين الضرورية إلى متعة - 10 دقائق فقط يمكن أن تجعل يومك أفضل. بينما بدأ كأداة للتعافي بعد جراحة الغدة الدرقية، أصبح مفيداً لأي شخص يعاني من توتر الرقبة، خاصة موظفي المكاتب المعرضين لمشاكل العمود الفقري (مثلي).</p>
+            <p>سحر Neck Blocks يكمن في قدرته على تحويل التمارين الضرورية إلى متعة - 10 دقائق فقط يمكن أن تجعل يومك أفضل. بينما بدأ كأداة للتعافي بعد جراحة الغدة الدرقية، أصبح مفيداً لأي شخص يعاني من توتر الرقبة، خاصة موظفي المكاتب المعرضين لمشاكل العمود الفقري (��ثلي).</p>
             <p>بالبناء على مشروع كتل موجود، أضفت العديد من الميزات المبتكرة:</p>
             <ul>
                 <li>دمج AirPods للتحكم بالحركة (الإمالة لأعلى للتدوير، ولأسفل للتسريع، مع حركات يسار-يمين بديهية)</li>
@@ -606,7 +851,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <h2>מסע אישי</h2>
             <p>עם רקע בחומרה חכמה ובינה מלאכותית בחברות טכנולוגיה מובילות, אני חוקר כעת אופקים חדשים ביזמות בתחום הבינה המלאכותית.</p>
             <p>החיים קיבלו תפנית בלתי צפויה כאשר אשתי אובחנה עם קשרים בבלוטת התריס במהלך בדיקה שגרתית לפני שנתיים. השנה, ביופסיה חשפה גידול ממאיר, שהוביל לניתוח להסרת בלוטת התריס השמאלית. למרות שהניתוח היה מוצלח, הוא סימן את תחילתו של פרק חדש בחיינו, כולל ניהול תזונה קפדני - במיוחד עם מאכלים כמו אצות וירקות מצליבים.</p>
-            <p>החוויה האישית הזו הציתה רעיון. בהתחלה שקלתי אפליקציה למעקב תזונה (אם כי גיליונות אלקטרוניים הספיקו), רציתי לעזור עם נוקשות הצוואר שלאחר הניתוח. בהשראת אהבתה של אשתי למשחקי התאמה והתשוקה שלי לטטריס, ובנוסף לראיית אפליקציה מבוססת AirPods לתנוחת צוואר ב-Product Hunt, הכל התחבר!</p>
+            <p>החוויה האישית הזו הציתה רעיון. בהתחלה שקלתי אפליקציה למעקב תזונה (אם כי גיליונות אלקטרוניים הספיקו), רציתי לעזור עם נוקשות הצוואר שלאחר הניתוח. בהשראת אהבה של אשתי למשחקי התאמה והתשוקה שלי לטטריס, ובנוסף לראיית אפליקציה מבוססת AirPods לתנוחת צוואר ב-Product Hunt, הכל התחבר!</p>
             <p>הקסם של Neck Blocks טמון ביכולתו להפוך תרגילים חיוניים לכיף - רק 10 דקות יכולות להפוך את כל היום שלכם לטוב יותר. בעוד שהתחיל ככלי להתאוששות מניתוח בלוטת התריס, הוא הפך לבעל ערך לכל מי שמתמודד עם מתח בצוואר, במיוחד עובדי משרד בסיכון לבעיות צוואריות (כמוני).</p>
             <p>:בהתבסס על פרויקט בלוקים קיים, הוספתי מספר תכונות חדשניות</p>
             <ul>
@@ -615,7 +860,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li>חוויית שמע מותאמת אישית - מושלמת לשימוש עם אוזניות מבטלות רעשים, בן אם בשקט או עם מוזיקת רקע עדינה</li>
                 <li>!עוד תכונות מרגשות בפיתוח - הישארו מעודכנים</li>
             </ul>
-            <p>במבט קדימה, אני נרגש לפתח משחק הרפתקאות מרתק המשתמש באודיו מרחבי ומעקב תנועות ראש באמצעות AirPods. דמיינו ניווט בעולם שבו מפלצות אורבות משמאלכם ואוצרות קוראים לכם מימין, תוך שימוש רק בשמיעה ותנועות ראש להכוונה.</p>
+            <p>במבט קימה, אני נרגש לפתח משחק הרפתקאות מרתק המשתמש באודיו מרחבי ומעקב תנועות ראש באמצעות AirPods. דמיינו ניווט בעולם שבו מפלצות אורבות משמאלכם ואוצרות קוראים לכם מימין, תוך שימוש רק בשמיעה ותנועות ראש להכוונה.</p>
             <p>זו דרך חדשה לגמרי לשחק - ללא קלט חזותי, רק אודיו ותנועה. מסקרן אתכם? בואו נתחבר ונחקור את האפשרויות האלה יחד!</p>
         </div>
 
@@ -679,10 +924,11 @@ body {
 }
 
 .language-selector select {
-    padding: 0.5rem 2rem 0.5rem 1rem;
+    padding: 0.75rem 2rem 0.75rem 1.5rem;
+    min-width: 140px;
     font-size: 1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     background-color: #f5f5f7;
     color: #1d1d1f;
     cursor: pointer;
@@ -692,10 +938,27 @@ body {
     background-position: right 0.7rem top 50%;
     background-size: 0.65rem auto;
     transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .language-selector select:hover {
+    transform: translateY(-2px);
     background-color: #e8e8ed;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .language-selector select {
+        background-color: #1d1d1f;
+        color: #f5f5f7;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23f5f5f7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    }
+
+    .language-selector select:hover {
+        background-color: #2d2d2f;
+    }
 }
 
 /* 章节样式 */
@@ -971,448 +1234,275 @@ h1 {
     }
 }
 
-/* 英语样式优化 - 简洁现代 */
-.english {
-    --heading-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-}
-
-.english h1 {
-    font-family: var(--heading-font);
-    letter-spacing: -0.02em;
-}
-
-/* 中文样式化 - 优雅大气 */
-.chinese {
-    --heading-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
-    --body-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
-    letter-spacing: 0.05em;
-}
-
-.chinese h1 {
-    font-family: var(--heading-font);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-}
-
-.chinese .story {
-    letter-spacing: 0.05em;
-    line-height: 1.8;
-}
-
-/* 阿拉伯语样式优化 - 优雅流畅 */
-.arabic {
-    --heading-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
-    --body-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
-    line-height: 1.8;
-}
-
-.arabic h1 {
-    font-family: var(--heading-font);
-    font-weight: 600;
-    letter-spacing: 0;
-}
-
-.arabic .story {
-    line-height: 1.9;
-}
-
-/* 希伯来语样式优化 - 简约现代 */
-.hebrew {
-    --heading-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
-    --body-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
-    line-height: 1.7;
-}
-
-.hebrew h1 {
-    font-family: var(--heading-font);
-    font-weight: 600;
-    letter-spacing: 0;
-}
-
-/* 为每种语言应用基础字体设置 */
-.section {
-    font-family: var(--body-font);
-}
-
-.section h1,
-.section h2 {
-    font-family: var(--heading-font);
-}
-
-/* 深色模式下的文化适配 */
-@media (prefers-color-scheme: dark) {
-    .arabic .story,
-    .hebrew .story {
-        background: rgba(29, 29, 31, 0.9);
+    /* 英语样式优化 - 简洁现代 */
+    .english {
+        --heading-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+        --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     }
-}
 
-/* RTL 语言的特殊处理 */
-[dir="rtl"] .story li::before {
-    right: -1.5rem;
-    left: auto;
-}
+    .english h1 {
+        font-family: var(--heading-font);
+        letter-spacing: -0.02em;
+    }
 
-[dir="rtl"] .contact {
-    text-align: right;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .chinese h1 {
+    /* 中文样式化 - 优雅大气 */
+    .chinese {
+        --heading-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
+        --body-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
         letter-spacing: 0.05em;
+    }
+
+    .chinese h1 {
+        font-family: var(--heading-font);
+        font-weight: 600;
+        letter-spacing: 0.1em;
+    }
+
+    .chinese .story {
+        letter-spacing: 0.05em;
+        line-height: 1.8;
+    }
+
+    /* 阿拉伯语样式优化 - 优雅流畅 */
+    .arabic {
+        --heading-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
+        --body-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
+        line-height: 1.8;
+    }
+
+    .arabic h1 {
+        font-family: var(--heading-font);
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+
+    .arabic .story {
+        line-height: 1.9;
+    }
+
+    /* 希伯来语样式优化 - 简约现代 */
+    .hebrew {
+        --heading-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
+        --body-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
+        line-height: 1.7;
+    }
+
+    .hebrew h1 {
+        font-family: var(--heading-font);
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+
+    /* 为每种语言应用基础字体设置 */
+    .section {
+        font-family: var(--body-font);
+    }
+
+    .section h1,
+    .section h2 {
+        font-family: var(--heading-font);
+    }
+
+    /* 深色模式下的文化适配 */
+    @media (prefers-color-scheme: dark) {
+        .arabic .story,
+        .hebrew .story {
+            background: rgba(29, 29, 31, 0.9);
+        }
+    }
+
+    /* RTL 语言的特殊处理 */
+    [dir="rtl"] .story li::before {
+        right: -1.5rem;
+        left: auto;
+    }
+
+    [dir="rtl"] .contact {
+        text-align: right;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+        .chinese h1 {
+            letter-spacing: 0.05em;
+        }
+
+        .arabic,
+        .hebrew {
+            line-height: 1.6;
+        }
+    }
+
+    /* 动画优化 */
+    .section {
+        --animation-duration: 0.8s;
+        --animation-timing: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .english,
+    .chinese {
+        animation-duration: var(--animation-duration);
+        animation-timing-function: var(--animation-timing);
     }
 
     .arabic,
     .hebrew {
+        animation-duration: calc(var(--animation-duration) * 1.2);
+    }
+
+    /* 交互效果优化 */
+    .section {
+        transition: opacity 0.3s ease;
+    }
+
+    .section:hover .thank-you {
+        transform: scale(1.02);
+        transition: transform 0.3s var(--animation-timing);
+    }
+
+    /* 打印样式优化 */
+    @media print {
+        .section {
+            animation: none;
+            opacity: 1;
+        }
+
+        .story {
+            break-inside: avoid;
+        }
+    }
+
+    /* 世界语样式优化 */
+    .esperanto {
+        --heading-font: "Noto Sans", "Ubuntu", "DejaVu Sans", Arial, sans-serif;
+        --body-font: "Noto Sans", "Ubuntu", "DejaVu Sans", Arial, sans-serif;
         line-height: 1.6;
     }
-}
 
-/* 动画优化 */
-.section {
-    --animation-duration: 0.8s;
-    --animation-timing: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.english,
-.chinese {
-    animation-duration: var(--animation-duration);
-    animation-timing-function: var(--animation-timing);
-}
-
-.arabic,
-.hebrew {
-    animation-duration: calc(var(--animation-duration) * 1.2);
-}
-
-/* 交互效果优化 */
-.section {
-    transition: opacity 0.3s ease;
-}
-
-.section:hover .thank-you {
-    transform: scale(1.02);
-    transition: transform 0.3s var(--animation-timing);
-}
-
-/* 打印样式优化 */
-@media print {
-    .section {
-        animation: none;
-        opacity: 1;
+    .esperanto h1 {
+        font-weight: 700;
+        letter-spacing: 0.01em;
     }
 
-    .story {
-        break-inside: avoid;
+    .esperanto .story {
+        line-height: 1.7;
     }
-}
 
-/* 世界语样式优化 */
-.esperanto {
-    --heading-font: "Noto Sans", "Ubuntu", "DejaVu Sans", Arial, sans-serif;
-    --body-font: "Noto Sans", "Ubuntu", "DejaVu Sans", Arial, sans-serif;
-    line-height: 1.6;
-}
+    /* 逻辑语样式优化 */
+    .lojban {
+        --heading-font: "Noto Sans", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
+        --body-font: "Noto Sans", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
+        line-height: 1.5;
+    }
 
-.esperanto h1 {
-    font-weight: 700;
-    letter-spacing: 0.01em;
-}
+    .lojban h1 {
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
 
-.esperanto .story {
-    line-height: 1.7;
-}
-
-/* 逻辑语样式优化 */
-.lojban {
-    --heading-font: "Noto Sans", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
-    --body-font: "Noto Sans", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
-    line-height: 1.5;
-}
-
-.lojban h1 {
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-/* 俄罗斯方块背景样式 */
-.tetris-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: rgba(255, 255, 255, 0.97);
-}
-
-.tetris-block {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #0066cc;
-    border: 1px solid rgba(0, 102, 204, 0.3);
-    box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
-    opacity: 0.1;
-    transition: all 0.3s ease;
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
+    /* 俄罗斯方块背景样式 */
     .tetris-background {
-        background: rgba(0, 0, 0, 0.97);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: rgba(255, 255, 255, 0.97);
     }
-    
+
     .tetris-block {
-        background-color: #4d94ff;
-        border-color: rgba(77, 148, 255, 0.5);
-        box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
-        opacity: 0.25;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: #0066cc;
+        border: 1px solid rgba(0, 102, 204, 0.3);
+        box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
+        opacity: 0.1;
+        transition: all 0.3s ease;
     }
-}
 
-.changelog {
-    margin-top: 4rem;
-    padding: 2rem;
-    background: #f5f5f7;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-}
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: dark) {
+        .tetris-background {
+            background: rgba(0, 0, 0, 0.97);
+        }
+        
+        .tetris-block {
+            background-color: #4d94ff;
+            border-color: rgba(77, 148, 255, 0.5);
+            box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
+            opacity: 0.25;
+        }
+    }
 
-.changelog h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #1d1d1f;
-}
-
-.version {
-    margin-bottom: 2rem;
-}
-
-.version h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #1d1d1f;
-}
-
-.version ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.version ul li {
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
-
-.version ul ul {
-    margin-top: 0.5rem;
-    margin-left: 1.5rem;
-    padding-left: 1rem;
-    border-left: 2px solid rgba(0,102,204,0.2);
-}
-
-.version ul ul li {
-    margin-bottom: 0.5rem;
-    font-size: 0.95em;
-    color: #666;
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
     .changelog {
-        background: #1d1d1f;
+        margin-top: 4rem;
+        padding: 2rem;
+        background: #f5f5f7;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     }
-    
-    .changelog h2,
+
+    .changelog h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #1d1d1f;
+    }
+
+    .version {
+        margin-bottom: 2rem;
+    }
+
     .version h3 {
-        color: #f5f5f7;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1d1d1f;
     }
-    
-    .version ul ul li {
-        color: #999;
+
+    .version ul {
+        list-style: none;
+        padding-left: 0;
     }
-    
+
+    .version ul li {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
     .version ul ul {
-        border-left-color: rgba(0,102,204,0.4);
+        margin-top: 0.5rem;
+        margin-left: 1.5rem;
+        padding-left: 1rem;
+        border-left: 2px solid rgba(0,102,204,0.2);
     }
-}
+
+    .version ul ul li {
+        margin-bottom: 0.5rem;
+        font-size: 0.95em;
+        color: #666;
+    }
+
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: dark) {
+        .changelog {
+            background: #1d1d1f;
+        }
+        
+        .changelog h2,
+        .version h3 {
+            color: #f5f5f7;
+        }
+        
+        .version ul ul li {
+            color: #999;
+        }
+        
+        .version ul ul {
+            border-left-color: rgba(0,102,204,0.4);
+        }
+    }
 </style>
-
-<script>
-function showSection(lang) {
-    const sections = document.querySelectorAll('.section');
-    const dividers = document.querySelectorAll('.divider');
-    
-    dividers.forEach(divider => {
-        divider.style.display = 'none';
-    });
-    
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
-    
-    const selectedSection = document.querySelector(`.section.${lang}`);
-    if (selectedSection) {
-        selectedSection.style.display = 'block';
-    }
-    
-    document.querySelector('.language-selector select').value = lang;
-    
-    // 更新语言选项的显示
-    updateLanguageOptions(lang);
-    
-    // 设置 body 的 lang 属性来控制按钮文字
-    document.body.setAttribute('lang', lang);
-}
-function getBrowserLanguage() {
-    const browserLang = navigator.language || navigator.userLanguage;
-    const lang = browserLang.toLowerCase().split('-')[0];
-    
-    const languageMap = {
-        'en': 'english',
-        'zh': 'chinese', 
-        'ar': 'arabic',
-        'he': 'hebrew'
-    };
-
-    return languageMap[lang] || 'english';
-}
-
-// 添加新的语言本地化函数
-function updateLanguageOptions(currentLang) {
-    const select = document.getElementById('languageSelect');
-    const options = select.getElementsByTagName('option');
-    
-    Array.from(options).forEach(option => {
-        try {
-            const names = JSON.parse(option.dataset.names);
-            option.textContent = names[currentLang] || names['english']; // 如果没有对应翻译，使用英语
-        } catch (e) {
-            console.error('Error parsing language names:', e);
-        }
-    });
-}
-
-// 更新 showSection 函数
-function showSection(lang) {
-    const sections = document.querySelectorAll('.section');
-    const dividers = document.querySelectorAll('.divider');
-    
-    dividers.forEach(divider => {
-        divider.style.display = 'none';
-    });
-    
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
-    
-    const selectedSection = document.querySelector(`.section.${lang}`);
-    if (selectedSection) {
-        selectedSection.style.display = 'block';
-    }
-    
-    document.querySelector('.language-selector select').value = lang;
-    
-    // 更新语言选项的显示
-    updateLanguageOptions(lang);
-    
-    // 设置 body 的 lang 属性来控制按钮文字
-    document.body.setAttribute('lang', lang);
-}
-
-// 更新事件监听器
-document.querySelector('.language-selector select').addEventListener('change', function(e) {
-    const lang = e.target.value;
-    showSection(lang);
-    const url = new URL(window.location);
-    url.searchParams.set('lang', lang);
-    window.history.pushState({}, '', url);
-});
-
-// 页面加载时初始化语言
-document.addEventListener('DOMContentLoaded', function() {
-    const defaultLang = getBrowserLanguage();
-    document.body.setAttribute('lang', defaultLang);
-    showSection(defaultLang);
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const langParam = urlParams.get('lang');
-    if (langParam) {
-        showSection(langParam);
-    }
-});
-
-// 俄罗斯方块背景动画
-document.addEventListener('DOMContentLoaded', function() {
-    const background = document.querySelector('.tetris-background');
-    const shapes = [
-        [[1, 1, 1, 1]], // I
-        [[1, 1], [1, 1]], // O
-        [[1, 1, 1], [0, 1, 0]], // T
-        [[1, 1, 1], [1, 0, 0]], // L
-        [[1, 1, 1], [0, 0, 1]], // J
-        [[1, 1, 0], [0, 1, 1]], // S
-        [[0, 1, 1], [1, 1, 0]]  // Z
-    ];
-
-    function createTetrisBlock() {
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-        container.style.top = '-100px';
-        container.style.transform = `rotate(${Math.floor(Math.random() * 4) * 90}deg)`;
-
-        shape.forEach((row, i) => {
-            row.forEach((cell, j) => {
-                if (cell) {
-                    const block = document.createElement('div');
-                    block.className = 'tetris-block';
-                    block.style.left = (j * 20) + 'px';
-                    block.style.top = (i * 20) + 'px';
-                    container.appendChild(block);
-                }
-            });
-        });
-
-        background.appendChild(container);
-
-        let posY = -100;
-        const speed = 0.5 + Math.random() * 0.5;
-
-        function fall() {
-            posY += speed;
-            container.style.top = posY + 'px';
-
-            if (posY < window.innerHeight + 100) {
-                requestAnimationFrame(fall);
-            } else {
-                container.remove();
-            }
-        }
-
-        fall();
-    }
-
-    // 每3秒创建一个新的方块
-    setInterval(createTetrisBlock, 3000);
-    // 初始创建几个方块
-    for (let i = 0; i < 5; i++) {
-        setTimeout(createTetrisBlock, i * 500);
-    }
-});
-
-function scrollToChangelog() {
-    const currentLang = document.querySelector('.language-selector select').value;
-    const changelogSection = document.querySelector(`.${currentLang} .changelog`);
-    if (changelogSection) {
-        changelogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-</script>

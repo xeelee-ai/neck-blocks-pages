@@ -67,6 +67,85 @@
 [dir="rtl"] .thank-you:hover::after {
     transform: translate(50%, -50%) scale(1);
 }
+
+/* 导航按钮样式 */
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 0 1rem;
+}
+
+.nav-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    min-width: 140px;
+    justify-content: center;
+    border: none;
+    border-radius: 12px;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.nav-button:hover {
+    transform: translateY(-2px);
+    background: #e8e8ed;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.nav-button .icon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+/* 多语言文本样式 */
+.nav-button .english-text,
+.nav-button .chinese-text,
+.nav-button .arabic-text,
+.nav-button .hebrew-text {
+    display: none;
+}
+
+/* 根据 body 的 lang 属性显示对应语言的文本 */
+body[lang="english"] .nav-button .english-text,
+body[lang="chinese"] .nav-button .chinese-text,
+body[lang="arabic"] .nav-button .arabic-text,
+body[lang="hebrew"] .nav-button .hebrew-text {
+    display: inline;
+}
+
+/* 默认显示英文 */
+body:not([lang]) .nav-button .english-text {
+    display: inline;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .nav-button {
+        background: #1d1d1f;
+        color: #f5f5f7;
+    }
+
+    .nav-button:hover {
+        background: #2d2d2f;
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .nav-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
 </style>
 
 <script>
@@ -88,6 +167,153 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => heart.remove(), 1000);
         });
     });
+});
+
+// 添加滚动到开发者故事的函数
+function scrollToStory() {
+    const currentLang = document.querySelector('.language-selector select').value;
+    const storySection = document.querySelector(`.${currentLang} .story`);
+    if (storySection) {
+        storySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// 更新 showSection 函数以设置语言属性
+function showSection(lang) {
+    const sections = document.querySelectorAll('.section');
+    const dividers = document.querySelectorAll('.divider');
+    
+    dividers.forEach(divider => {
+        divider.style.display = 'none';
+    });
+    
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    const selectedSection = document.querySelector(`.section.${lang}`);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+    
+    document.querySelector('.language-selector select').value = lang;
+    
+    // 更新语言选项的显示
+    updateLanguageOptions(lang);
+    
+    // 设置 body 的 lang 属性来控制按钮文字
+    document.body.setAttribute('lang', lang);
+}
+
+function getBrowserLanguage() {
+    const browserLang = navigator.language || navigator.userLanguage;
+    const lang = browserLang.toLowerCase().split('-')[0];
+    
+    const languageMap = {
+        'en': 'english',
+        'zh': 'chinese', 
+        'ar': 'arabic',
+        'he': 'hebrew'
+    };
+
+    return languageMap[lang] || 'english';
+}
+
+// 添加新的语言本地化函数
+function updateLanguageOptions(currentLang) {
+    const select = document.getElementById('languageSelect');
+    const options = select.getElementsByTagName('option');
+    
+    Array.from(options).forEach(option => {
+        try {
+            const names = JSON.parse(option.dataset.names);
+            option.textContent = names[currentLang] || names['english']; // 如果没有对应翻译，使用英语
+        } catch (e) {
+            console.error('Error parsing language names:', e);
+        }
+    });
+}
+
+// 更新事件监听器
+document.querySelector('.language-selector select').addEventListener('change', function(e) {
+    const lang = e.target.value;
+    showSection(lang);
+    const url = new URL(window.location);
+    url.searchParams.set('lang', lang);
+    window.history.pushState({}, '', url);
+});
+
+// 页面加载时初始化语言
+document.addEventListener('DOMContentLoaded', function() {
+    const defaultLang = getBrowserLanguage();
+    document.body.setAttribute('lang', defaultLang);
+    showSection(defaultLang);
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    if (langParam) {
+        showSection(langParam);
+    }
+});
+
+// 俄罗斯方块背景动画
+document.addEventListener('DOMContentLoaded', function() {
+    const background = document.querySelector('.tetris-background');
+    const shapes = [
+        [[1, 1, 1, 1]], // I
+        [[1, 1], [1, 1]], // O
+        [[1, 1, 1], [0, 1, 0]], // T
+        [[1, 1, 1], [1, 0, 0]], // L
+        [[1, 1, 1], [0, 0, 1]], // J
+        [[1, 1, 0], [0, 1, 1]], // S
+        [[0, 1, 1], [1, 1, 0]]  // Z
+    ];
+
+    function createTetrisBlock() {
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        container.style.top = '-100px';
+        container.style.transform = `rotate(${Math.floor(Math.random() * 4) * 90}deg)`;
+
+        shape.forEach((row, i) => {
+            row.forEach((cell, j) => {
+                if (cell) {
+                    const block = document.createElement('div');
+                    block.className = 'tetris-block';
+                    block.style.left = (j * 20) + 'px';
+                    block.style.top = (i * 20) + 'px';
+                    container.appendChild(block);
+                }
+            });
+        });
+
+        background.appendChild(container);
+
+        let posY = -100;
+        const speed = 0.5 + Math.random() * 0.5;
+
+        function fall() {
+            posY += speed;
+            container.style.top = posY + 'px';
+
+            if (posY < window.innerHeight + 100) {
+                requestAnimationFrame(fall);
+            } else {
+                container.remove();
+            }
+        }
+
+        fall();
+    }
+
+    // 每3秒创建一个新的方块
+    setInterval(createTetrisBlock, 3000);
+    // 初始创建几个方块
+    for (let i = 0; i < 5; i++) {
+        setTimeout(createTetrisBlock, i * 500);
+    }
 });
 </script>
 
@@ -112,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "hebrew": "סינית"
             }'>中文</option>
             
-            <!-- 阿拉伯语 -->
+            <!-- 拉伯语 -->
             <option value="arabic" data-names='{
                 "english": "Arabic",
                 "chinese": "阿拉伯语",
@@ -128,6 +354,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 "hebrew": "עברית"
             }'>עברית</option>
         </select>
+    </div>
+
+    <div class="nav-buttons">
+        <button onclick="scrollToStory()" class="nav-button">
+            <span class="icon">📖</span>
+            <span class="english-text">Developer Story</span>
+            <span class="chinese-text">开发者故事</span>
+            <span class="arabic-text">قصة المطور</span>
+            <span class="hebrew-text">סיפור המפתח</span>
+        </button>
+        <button onclick="scrollToChangelog()" class="nav-button">
+            <span class="icon">📝</span>
+            <span class="english-text">Changelog</span>
+            <span class="chinese-text">更新日志</span>
+            <span class="arabic-text">سجل التغييرات</span>
+            <span class="hebrew-text">יומן שינויים</span>
+        </button>
     </div>
 
   
@@ -149,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="story">
             <h2>开发者故事</h2>
             <p>我曾在大型公司从事智能硬件和人工智能领域的工作，现在正在涉足与人工智能相关的创业。</p>
-            <p>两年前，在一次例行体检中，我妻子被诊断出患有甲状腺结节。今年，经过活检，我们发现这是一个恶性肿瘤，于是她接受了手术，切除了左侧甲状腺。手术很顺利，但这是一个相当漫长的过程。今后，她需要仔细注意饮食——例如，限制海带和十字花科蔬菜等食物。</p>
+            <p>两年前，在一次例行体检中，我妻子被诊断出患有甲状腺结节。年，经过活检，我们发现这是一个恶性肿瘤，于是她接受了手术，切除了左侧甲状腺。手术很顺利，但这是一个相当漫长的过程。今后，她需要仔细注意饮食——例如，限制海带和十字花科蔬菜等食物。</p>
             <p>这启发我创建了一个应用程序（最早是饮食控制的APP，但我发现在线表格就能解决该问题），来帮助她恢复僵硬的脖子，想到她喜欢消消乐，我喜欢俄罗斯方块，然后看到PH上有个通过AirPods来提醒脖子弯曲时间的APP，灵光一闪，啊哈！</p>
             <p>把脖子的锻炼游戏化是这个应用的价值，运动十分钟，轻松一整天。现在不仅仅是甲状腺术后患者，很多办公人群存在颈部肌肉紧张，可以有效缓解颈部肌肉紧张，预防颈椎病（比如我）。</p>
             <p>于是找了一个方块项目进行修改，增加了以下功能：</p>
@@ -159,8 +402,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li>把一些操作的音效关闭了，因为我喜欢耳机就开减噪，不播放东西，或者播放柔和一些轻音乐或者瑜伽音频</li>
                 <li>更多功能还在开发中，敬请期待</li>
             </ul>
-            <p>这也启发我后续会去做一款空间音频实现声音或者空间的感知定位结合AirPods头部控制来实现的冒险游戏，比如左边有怪物，右边有宝藏，您需要通过耳朵和头部来判断方向，通过声音的多普勒效应来判断距离，然后躲避怪物，拿到宝藏</p>
+            <p>这也启发我后续会去做一款空间音实现声音或者空间的感知定位结合AirPods头部控制来实现的冒险游戏，比如左边有怪物，右边有宝藏，您需要通过耳朵和头部来判断方向，通过声音的多普勒效应来判断距离，然后躲避怪物，拿到宝藏</p>
             <p>简而言之，就是一款不使用眼睛，只使用耳朵和头部来玩的游戏。如果您对这个概念感兴趣，请联系我，我们可以一起讨论和探索！</p>
+        </div>
+
+        <div class="changelog">
+            <h2>更新日志</h2>
+            <div class="version">
+                <h3>版本 0.0.1</h3>
+                <ul>
+                    <li>✨ 支持通过 AirPods 检测头部动作来进行游戏
+                        <ul>
+                            <li>抬头为旋转方块</li>
+                            <li>低头加速方块下落</li>
+                            <li>左右转头控制方块移动</li>
+                        </ul>
+                    </li>
+                    <li>✨ 新增消消乐模式</li>
+                    <li>🔇 关闭操作音效</li>
+                    <li>🎮 基础游戏功能实现</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -188,11 +450,30 @@ document.addEventListener('DOMContentLoaded', function() {
             <ul>
                 <li>AirPods integration for motion control (tilt up to rotate, down to speed up, with intuitive left-right movements)</li>
                 <li>A unique match-3 mode (combining the best of both worlds - with plans for themed graphics in future updates)</li>
-                <li>Customized audio experience - perfect for use with noise-cancelling headphones, whether in silence or with gentle background music</li>
+                <li></li>
                 <li>More exciting features in development - stay tuned!</li>
             </ul>
             <p>Looking ahead, I'm excited about developing an immersive adventure game using spatial audio and AirPods head tracking. Imagine navigating through a world where monsters lurk to your left and treasures beckon from the right, using just your hearing and head movements to guide you.</p>
             <p>It's a whole new way to game - no visual input, just audio and motion. Intrigued? Let's connect and explore these possibilities together!</p>
+        </div>
+
+        <div class="changelog">
+            <h2>Changelog</h2>
+            <div class="version">
+                <h3>Version 0.0.1</h3>
+                <ul>
+                    <li>✨ Added AirPods head motion controls
+                        <ul>
+                            <li>Tilt up to rotate blocks</li>
+                            <li>Tilt down to speed up falling</li>
+                            <li>Left/right head movements for block movement</li>
+                        </ul>
+                    </li>
+                    <li>✨ Implemented match-3 game mode</li>
+                    <li>🔇 Disabled operation sound effects for a more focused experience with noise-cancelling or background music</li>
+                    <li>🎮 Core game mechanics implementation</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -214,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <h2>رحلة شخصية</h2>
             <p>مع خلفية في الأجهزة الذكية والذكاء الاصطناعي في شركات التقنية الكبرى، أستكشف الآن آفاقاً جديدة في ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
             <p>تغيرت حياتنا عندما تم تشخيص زوجتي بعقد في الغدة الدرقية خلال فحص روتيني قبل عامين. هذا العام، كشفت الخزعة عن ورم خبيث، مما أدى إلى جراحة لإزالة الغدة الدرقية اليسرى. رغم نجاح الجراحة، إلا أنها كانت بداية فصل جديد في حياتنا، يشمل إدارة دقيقة للنظام الغذائي - خاصة مع الأطعمة مثل الأعشاب البحرية والخضروات الصليبية.</p>
-            <p>ألهمتني هذه التجربة الشخصية. في البداية فكرت في تطبيق لتتبع النظام الغذائي، لكنني أردت المساعدة في تخفيف تصلب الرقبة بعد الجراحة. بإلهام من حب زوجتي لألعاب المطابقة وشغفي بلعبة تتريس، بالإضافة إلى رؤية تطبيق يعتمد على AirPods لتصحيح وضعية الرقبة، اكتملت الفكرة!</p>
+            <p>ألهمتني هذه التجربة الشخصية. في البداية فكرت في تطبيق لتتبع النظام الغذائي، لكنني أردت المساعدة في تخفي تصلب الرقبة بعد الجراحة. بإلهام من حب زوجتي لألعاب المطابقة وشغفي بلعبة تتريس، بالإضافة إلى رؤية تطبيق يعتمد على AirPods لتصحيح وضعية الرقبة، اكتملت الفكرة!</p>
             <p>سحر Neck Blocks يكمن في قدرته على تحويل التمارين الضرورية إلى متعة - 10 دقائق فقط يمكن أن تجعل يومك أفضل. بينما بدأ كأداة للتعافي بعد جراحة الغدة الدرقية، أصبح مفيداً لأي شخص يعاني من توتر الرقبة، خاصة موظفي المكاتب المعرضين لمشاكل العمود الفقري (مثلي).</p>
             <p>بالبناء على مشروع كتل موجود، أضفت العديد من الميزات المبتكرة:</p>
             <ul>
@@ -225,6 +506,25 @@ document.addEventListener('DOMContentLoaded', function() {
             </ul>
             <p>أتطلع إلى تطوير لعبة مغامرات غامرة باستخدام الصوت المكاني وتتبع حركة الرأس عبر AirPods. تخيلوا التنقل في عالم حيث تكمن الوحوش على يساركم والكنوز تناديكم من اليمين، باستخدام السمع وحركات الرأس فقط لتوجيهكم.</p>
             <p>إنها طريقة جديدة تماماً للعب - بدون مدخلات بصرية، فقط الصوت والحركة. هل أثار هذا اهتمامكم؟ دعونا نتواصل ونستكشف هذه الإمكانيات معاً!</p>
+        </div>
+
+        <div class="changelog" dir="rtl">
+            <h2>سجل التغييرات</h2>
+            <div class="version">
+                <h3>الإصدار 0.0.1</h3>
+                <ul>
+                    <li>✨ إضافة التحكم بحركة الرأس عبر AirPods
+                        <ul>
+                            <li>الإمالة لأعلى لتدوير الكتل</li>
+                            <li>الإمالة لأسفل لتسريع السقوط</li>
+                            <li>حركات الرأس يمينًا/يسارًا للتحكم في حركة الكتل</li>
+                        </ul>
+                    </li>
+                    <li>✨ تنفيذ وضع مطابقة الثلاثية</li>
+                    <li>🔇 إيقاف المؤثرات الصوتية للعمليات للتركيز مع خاصية إلغاء الضوضاء أو الموسيقى الخلفية</li>
+                    <li>🎮 تنفيذ آليات اللعبة الأساسية</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -250,13 +550,32 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>הקסם של Neck Blocks טמון ביכולתו להפוך תרגילים חיוניים לכיף - רק 10 דקות יכולות להפוך את כל היום שלכם לטוב יותר. בעוד שהתחיל ככלי להתאוששות מניתוח בלוטת התריס, הוא הפך לבעל ערך לכל מי שמתמודד עם מתח בצוואר, במיוחד עובדי משרד בסיכון לבעיות צוואריות (כמוני).</p>
             <p>:בהתבסס על פרויקט בלוקים קיים, הוספתי מספר תכונות חדשניות</p>
             <ul>
-                <li>שילוב AirPods לשליטה בתנועה (הטיה למעלה לסיבוב, למטה להאצה, עם תנועות שמאל-ימין אינטואיטיביות)</li>
+                <li>שילוב AirPods שליטה בתנועה (הטיה למעלה לסיבוב, למטה להאצה, עם תנועות שמאל-ימין אינטואיטיביות)</li>
                 <li>מצב התאמה ייחודי (משלב את הטוב משני העולמות - עם תכניות לגרפיקה תמטית בעדכונים עתידיים)</li>
-                <li>חוויית שמע מותאמת אישית - מושלמת לשימוש עם אוזניות מבטלות רעשים, בין אם בשקט או עם מוזיקת רקע עדינה</li>
+                <li>חוויית שמע מותאמת אישית - מושלמת לשימוש עם אוזניות מבטלות רעשים, בן אם בשקט או עם מוזיקת רקע עדינה</li>
                 <li>!עוד תכונות מרגשות בפיתוח - הישארו מעודכנים</li>
             </ul>
             <p>במבט קדימה, אני נרגש לפתח משחק הרפתקאות מרתק המשתמש באודיו מרחבי ומעקב תנועות ראש באמצעות AirPods. דמיינו ניווט בעולם שבו מפלצות אורבות משמאלכם ואוצרות קוראים לכם מימין, תוך שימוש רק בשמיעה ותנועות ראש להכוונה.</p>
             <p>זו דרך חדשה לגמרי לשחק - ללא קלט חזותי, רק אודיו ותנועה. מסקרן אתכם? בואו נתחבר ונחקור את האפשרויות האלה יחד!</p>
+        </div>
+
+        <div class="changelog" dir="rtl">
+            <h2>יומן שינויים</h2>
+            <div class="version">
+                <h3>גרסה 0.0.1</h3>
+                <ul>
+                    <li>✨ הוספת שליטה בתנועות ראש באמצעות AirPods
+                        <ul>
+                            <li>הטיה למעלה לסיבוב בלוקים</li>
+                            <li>הטיה למטה להאצת נפילה</li>
+                            <li>תנועות ראש שמאלה/ימינה לתנועת בלוקים</li>
+                        </ul>
+                    </li>
+                    <li>✨ יישום מצב משחק התאמה-3</li>
+                    <li>🔇 השבתת אפקטים קוליים לחוויה ממוקדת יותר עם ביטול רעשים או מוזיקת רקע</li>
+                    <li>🎮 יישום מכניקת משחק בסיסית</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -603,7 +922,7 @@ h1 {
     letter-spacing: -0.02em;
 }
 
-/* 中文样式优化 - 优雅大气 */
+/* 中文样式化 - 优雅大气 */
 .chinese {
     --heading-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
     --body-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
@@ -793,6 +1112,75 @@ h1 {
         box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
     }
 }
+
+.changelog {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: #f5f5f7;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.changelog h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #1d1d1f;
+}
+
+.version {
+    margin-bottom: 2rem;
+}
+
+.version h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #1d1d1f;
+}
+
+.version ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.version ul li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.version ul ul {
+    margin-top: 0.5rem;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(0,102,204,0.2);
+}
+
+.version ul ul li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95em;
+    color: #666;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .changelog {
+        background: #1d1d1f;
+    }
+    
+    .changelog h2,
+    .version h3 {
+        color: #f5f5f7;
+    }
+    
+    .version ul ul li {
+        color: #999;
+    }
+    
+    .version ul ul {
+        border-left-color: rgba(0,102,204,0.4);
+    }
+}
 </style>
 
 <script>
@@ -800,24 +1188,26 @@ function showSection(lang) {
     const sections = document.querySelectorAll('.section');
     const dividers = document.querySelectorAll('.divider');
     
-    // 隐藏所有分隔线
     dividers.forEach(divider => {
         divider.style.display = 'none';
     });
     
-    // 隐藏所有部分
     sections.forEach(section => {
         section.style.display = 'none';
     });
     
-    // 只显示选中的语言部分
     const selectedSection = document.querySelector(`.section.${lang}`);
     if (selectedSection) {
         selectedSection.style.display = 'block';
     }
     
-    // 更新选择器的值
     document.querySelector('.language-selector select').value = lang;
+    
+    // 更新语言选项的显示
+    updateLanguageOptions(lang);
+    
+    // 设置 body 的 lang 属性来控制按钮文字
+    document.body.setAttribute('lang', lang);
 }
 function getBrowserLanguage() {
     const browserLang = navigator.language || navigator.userLanguage;
@@ -870,6 +1260,9 @@ function showSection(lang) {
     
     // 更新语言选项的显示
     updateLanguageOptions(lang);
+    
+    // 设置 body 的 lang 属性来控制按钮文字
+    document.body.setAttribute('lang', lang);
 }
 
 // 更新事件监听器
@@ -881,9 +1274,10 @@ document.querySelector('.language-selector select').addEventListener('change', f
     window.history.pushState({}, '', url);
 });
 
-// 页面加载时初始化
+// 页面加载时初始化语言
 document.addEventListener('DOMContentLoaded', function() {
     const defaultLang = getBrowserLanguage();
+    document.body.setAttribute('lang', defaultLang);
     showSection(defaultLang);
     
     const urlParams = new URLSearchParams(window.location.search);
@@ -952,4 +1346,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(createTetrisBlock, i * 500);
     }
 });
+
+function scrollToChangelog() {
+    const currentLang = document.querySelector('.language-selector select').value;
+    const changelogSection = document.querySelector(`.${currentLang} .changelog`);
+    if (changelogSection) {
+        changelogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 </script>

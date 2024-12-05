@@ -389,22 +389,160 @@ body:not([lang]) .nav-button .english-text {
     align-items: center;
     gap: 0.5rem;
 }
+
+/* 添加故事部分的摇动动画 */
+.story {
+    animation: gentleFloat 8s ease-in-out infinite;
+    transform-origin: center center;
+    will-change: transform;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+@keyframes gentleFloat {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    20% {
+        transform: translate(5px, 3px) rotate(0.5deg) scale(1.002);
+    }
+    40% {
+        transform: translate(-4px, -3px) rotate(-0.5deg) scale(0.998);
+    }
+    60% {
+        transform: translate(-5px, 2px) rotate(-0.3deg) scale(1.001);
+    }
+    80% {
+        transform: translate(4px, -2px) rotate(0.4deg) scale(0.999);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+}
+
+/* 为不同语言版本添加错开的动画延迟和不同的动画周期 */
+.english .story {
+    animation: gentleFloat 8.5s ease-in-out infinite;
+    animation-delay: -2s;
+}
+
+.chinese .story {
+    animation: gentleFloat 7.5s ease-in-out infinite;
+    animation-delay: -1s;
+}
+
+/* 增强鼠标悬停效果 */
+.story:hover {
+    animation-play-state: paused;
+    transform: scale(1.015) translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 添加阴影动画 */
+.story::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.story:hover::before {
+    opacity: 1;
+}
+
+/* 优化移动端体验 */
+@media (max-width: 768px) {
+    @keyframes gentleFloat {
+        0% {
+            transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        20% {
+            transform: translate(3px, 2px) rotate(0.3deg) scale(1.001);
+        }
+        40% {
+            transform: translate(-2px, -2px) rotate(-0.3deg) scale(0.999);
+        }
+        60% {
+            transform: translate(-3px, 1px) rotate(-0.2deg) scale(1.001);
+        }
+        80% {
+        100% {
+            transform: translate(0, 0) rotate(0deg);
+        }
+    }
+}
+
+/* 添加减少动画的媒体查询 */
+@media (prefers-reduced-motion: reduce) {
+    .story {
+        animation: none;
+    }
+}
+
+/* 修改俄罗斯方块背景样式 */
+.tetris-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999; /* 提升到最上层 */
+    pointer-events: none; /* 确保不影响下层元素的交互 */
+    overflow: hidden;
+}
+
+/* 更新方块样式 */
+.tetris-block {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #0066cc;
+    border: 1px solid rgba(0, 102, 204, 0.3);
+    box-shadow: 0 0 12px rgba(0, 102, 204, 0.4);
+    opacity: 0.2; /* 略微提高透明度 */
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    pointer-events: none; /* 确保方块不影响交互 */
+    mix-blend-mode: screen; /* 添加混合模式使方块更好地融入界面 */
+}
+
+/* 深色模式下的方块样式 */
+@media (prefers-color-scheme: dark) {
+    .tetris-block {
+        background-color: #4d94ff;
+        border-color: rgba(77, 148, 255, 0.5);
+        box-shadow: 0 0 16px rgba(77, 148, 255, 0.6);
+        opacity: 0.25;
+        mix-blend-mode: screen;
+    }
+}
+
+/* 修改方块容器样式 */
+.tetris-background > div {
+    position: absolute;
+    z-index: 9999; /* 确保每个方块容器也在最上层 */
+    pointer-events: none;
+}
 </style>
 
 <script>
-// 修改 getBrowserLanguage 函数，使其更精确
+// 修改 getBrowserLanguage 函数，移除阿拉伯语和希伯来语的映射
 function getBrowserLanguage() {
     const browserLang = navigator.language || navigator.userLanguage;
     const lang = browserLang.toLowerCase().split('-')[0];
     
     const languageMap = {
         'en': 'english',
-        'zh': 'chinese', 
-        'ar': 'arabic',
-        'he': 'hebrew'
+        'zh': 'chinese'
     };
 
-    // 返回映射的语言，如果没有对应映射才返回英语
     return languageMap[lang] || 'english';
 }
 
@@ -430,12 +568,6 @@ document.addEventListener('DOMContentLoaded', function() {
         case 'chinese':
             currentLang.innerHTML = '<span class="lang-icon">🇨🇳</span>中文';
             break;
-        case 'arabic':
-            currentLang.innerHTML = '<span class="lang-icon">🇸🇦</span>العربية';
-            break;
-        case 'hebrew':
-            currentLang.innerHTML = '<span class="lang-icon">🇮🇱</span>עברית';
-            break;
     }
     
     // 设置 body 的 lang 属性
@@ -458,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 修改 showSection 函数，确保语言切换时的一致性
+// 修改 showSection 函数，移除阿拉伯语和希伯来语的处理
 function showSection(lang) {
     const sections = document.querySelectorAll('.section');
     sections.forEach(section => {
@@ -478,12 +610,6 @@ function showSection(lang) {
             break;
         case 'chinese':
             currentLang.innerHTML = '<span class="lang-icon">🇨🇳</span>中文';
-            break;
-        case 'arabic':
-            currentLang.innerHTML = '<span class="lang-icon">🇸🇦</span>العربية';
-            break;
-        case 'hebrew':
-            currentLang.innerHTML = '<span class="lang-icon">🇮🇱</span>עברית';
             break;
     }
     
@@ -517,13 +643,19 @@ document.addEventListener('DOMContentLoaded', function() {
         [[0, 1, 1], [1, 1, 0]]  // Z
     ];
 
+    // 修改 createTetrisBlock 函数
     function createTetrisBlock() {
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const container = document.createElement('div');
         container.style.position = 'absolute';
         container.style.left = Math.random() * (window.innerWidth - 100) + 'px';
         container.style.top = '-100px';
-        container.style.transform = `rotate(${Math.floor(Math.random() * 4) * 90}deg)`;
+        
+        // 添加摇摆动画的初始值
+        const swayAmplitude = 50; // 增大摇摆幅度
+        const swaySpeed = 2 + Math.random(); // 摇摆速度
+        const startTime = Date.now();
+        let initialX = parseFloat(container.style.left);
 
         shape.forEach((row, i) => {
             row.forEach((cell, j) => {
@@ -540,13 +672,26 @@ document.addEventListener('DOMContentLoaded', function() {
         background.appendChild(container);
 
         let posY = -100;
-        const speed = 1 + Math.random(); // 增加下落速度
-        const rotation = Math.random() * 360; // 添加旋转效果
+        const fallSpeed = 1.5 + Math.random(); // 略微加快下落速度
+        const rotationSpeed = 0.5 + Math.random() * 0.5; // 更自然的旋转速度
 
         function fall() {
-            posY += speed;
-            container.style.top = posY + 'px';
-            container.style.transform = `rotate(${rotation + posY * 0.1}deg)`; // 添加旋转动画
+            const time = (Date.now() - startTime) / 1000;
+            posY += fallSpeed;
+            
+            // 使用正弦函数创建左右摇摆效果
+            const sway = Math.sin(time * swaySpeed) * swayAmplitude;
+            const newX = initialX + sway;
+            
+            // 添加上下起伏的效果
+            const bounce = Math.sin(time * swaySpeed * 2) * 10;
+            
+            container.style.top = (posY + bounce) + 'px';
+            container.style.left = newX + 'px';
+            
+            // 添加自然的旋转效果
+            const rotation = Math.sin(time * swaySpeed) * 15; // 减小旋转角度使其更自然
+            container.style.transform = `rotate(${rotation}deg)`;
 
             if (posY < window.innerHeight + 100) {
                 requestAnimationFrame(fall);
@@ -558,13 +703,13 @@ document.addEventListener('DOMContentLoaded', function() {
         fall();
     }
 
-    // 初始创建多个方块
-    for (let i = 0; i < 5; i++) {
-        setTimeout(createTetrisBlock, i * 500);
+    // 初始创建更多方块
+    for (let i = 0; i < 8; i++) {
+        setTimeout(createTetrisBlock, i * 300);
     }
 
-    // 每2秒创建一个新的方块
-    setInterval(createTetrisBlock, 2000);
+    // 缩短创建新方块的间隔
+    setInterval(createTetrisBlock, 1500);
 
     // 窗口大小改变时重新计算
     window.addEventListener('resize', () => {
@@ -577,7 +722,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 修改 scrollToStory 函数
 function scrollToStory() {
-    // 获取当前语言
+    // 取当前语言
     const currentLang = document.body.getAttribute('lang') || 'english';
     const storySection = document.querySelector(`.${currentLang} .story`);
     if (storySection) {
@@ -616,34 +761,71 @@ function toggleLanguageMenu(event) {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden; /* 添加此行确保不会出现滚动条 */
+    z-index: 9999; /* 提升到最上层 */
+    pointer-events: none; /* 确保不影响下层元素的交互 */
+    overflow: hidden;
 }
 
+/* 更新方块样式 */
 .tetris-block {
     position: absolute;
     width: 20px;
     height: 20px;
     background-color: #0066cc;
     border: 1px solid rgba(0, 102, 204, 0.3);
-    box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
-    opacity: 0.1;
-    border-radius: 2px; /* 添加圆角使方块更美观 */
-    transition: opacity 0.3s ease;
+    box-shadow: 0 0 12px rgba(0, 102, 204, 0.4);
+    opacity: 0.2; /* 略微提高透明度 */
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    pointer-events: none; /* 确保方块不影响交互 */
+    mix-blend-mode: screen; /* 添加混合模式使方块更好地融入界面 */
 }
 
-/* 深色模式适配 */
+/* 深色模式下的方块样式 */
 @media (prefers-color-scheme: dark) {
-    .tetris-background {
-        background: rgba(0, 0, 0, 0.97);
-    }
-    
     .tetris-block {
         background-color: #4d94ff;
         border-color: rgba(77, 148, 255, 0.5);
-        box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
+        box-shadow: 0 0 16px rgba(77, 148, 255, 0.6);
+        opacity: 0.25;
+        mix-blend-mode: screen;
+    }
+}
+
+/* 修改方块容器样式 */
+.tetris-background > div {
+    position: absolute;
+    z-index: 9999; /* 确保每个方块容器也在最上层 */
+    pointer-events: none;
+}
+
+/* 添加方块出现时的动画 */
+@keyframes blockAppear {
+    from {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) rotate(0deg);
         opacity: 0.15;
+    }
+}
+
+.tetris-block {
+    animation: blockAppear 0.5s ease-out;
+}
+
+/* 深色模式下的动画终态透明度调整 */
+@media (prefers-color-scheme: dark) {
+    @keyframes blockAppear {
+        from {
+            transform: scale(0) rotate(180deg);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1) rotate(0deg);
+            opacity: 0.2;
+        }
     }
 }
 
@@ -691,14 +873,6 @@ function toggleLanguageMenu(event) {
                         <span class="lang-icon">🇨🇳</span>
                         <span class="lang-text">中文</span>
                     </div>
-                    <div class="menu-item" onclick="changeLanguage('arabic', event)">
-                        <span class="lang-icon">🇸🇦</span>
-                        <span class="lang-text">العربية</span>
-                    </div>
-                    <div class="menu-item" onclick="changeLanguage('hebrew', event)">
-                        <span class="lang-icon">🇮🇱</span>
-                        <span class="lang-text">עברית</span>
-                    </div>
                 </div>
             </button>
         </div>
@@ -736,27 +910,6 @@ function toggleLanguageMenu(event) {
             <p>这也启发我后续会去做一款空间音实现声音或者空间的感知定位结合AirPods头部控制来实现的冒险游戏，比如左边有怪物，右边有宝藏，您需要通过耳朵和头部来判断方向，通过声音的多普勒效应来判断距离，然后躲避怪物，拿到宝藏</p>
             <p>简而言之，就是一款不使用眼睛，只使用耳朵和头部来玩的游戏。如果您对这个概念感兴趣，请联系我，我们可以一起讨论和探索！</p>
         </div>
-
-        <div class="changelog">
-            <h2>更新日志</h2>
-            <div class="version">
-                <h3>版本 0.0.1</h3>
-                <ul>
-                    <li>✨ 支持通过 AirPods 检测头部动作来进行游戏
-                        <ul>
-                            <li>抬头为旋转方块</li>
-                            <li>低头加速方块下落</li>
-                            <li>左右转头控制方块移动</li>
-                        </ul>
-                    </li>
-                    <li>✨ 新增消消乐模式</li>
-                    <li>🔇 关闭部分操作音效</li>
-                    <li>🎮 基础游戏功能实现</li>
-                    <li>🎮 菜单设置支持多语言</li>
-                    <li>🎮 更多功能还在开发中，敬请期待</li>
-                </ul>
-            </div>
-        </div>
     </div>
 
     <!-- 英语部分 -->
@@ -784,142 +937,13 @@ function toggleLanguageMenu(event) {
                 <li>AirPods integration for motion control (tilt up to rotate, down to speed up, with intuitive left-right movements)</li>
                 <li>A unique match-3 mode (combining the best of both worlds - with plans for themed graphics in future updates)</li>
                 <li>Disabled operation sound effects</li>
-                <li>Menu settings support multiple languages</li>
                 <li>More exciting features in development - stay tuned!</li>
             </ul>
             <p>Looking ahead, I'm excited about developing an <strong>immersive adventure game</strong> using <strong>spatial audio</strong> and <strong>AirPods head tracking</strong>. Imagine navigating through a world where monsters lurk to your left and treasures beckon from the right, using just your <strong>hearing and head movements</strong> to guide you.</p>
             <p>It's a <strong>whole new way to game</strong> - no visual input, just audio and motion. Intrigued? Let's connect and explore these possibilities together!</p>
         </div>
-
-        <div class="changelog">
-            <h2>Changelog</h2>
-            <div class="version">
-                <h3>Version 0.0.1</h3>
-                <ul>
-                    <li>✨ Added AirPods head motion controls
-                        <ul>
-                            <li>Tilt up to rotate blocks</li>
-                            <li>Tilt down to speed up falling</li>
-                            <li>Left/right head movements for block movement</li>
-                        </ul>
-                    </li>
-                    <li>✨ Implemented match-3 game mode</li>
-                    <li>🔇 Disabled operation sound effects for a more focused experience with noise-cancelling or background music</li>
-                    <li>🎮 Core game mechanics implementation</li>
-                    <li>🎮 Menu settings support multiple languages</li>
-                    <li>🎮 More exciting features in development - stay tuned!</li>
-                </ul>
-            </div>
-        </div>
     </div>
 
-    <!-- 阿拉伯语部分 -->
-    <div class="section arabic" dir="rtl">
-        <h1>مرحباً بكم في Neck Blocks</h1>
-        <p class="subtitle">رحلتكم نحو راحة الرقبة تبدأ هنا</p>
-        
-        <p class="message">هل تواجهون صعوبات؟ نحن هنا للمساعدة! راسلونا عبر البريد الإلكتروني وسنرد عليكم في أقرب وقت</p>
-        
-        <div class="contact">
-            <strong>تواصلوا معنا على:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">شكراً لكونكم جزءاً من رحلتنا</p>
-
-        <div class="story">
-            <h2>رحلة شخصية</h2>
-            <p>مع خلفية في الأجهزة الذكية والذكاء الاصطناعي في شركات التقنية الكبرى، أستكشف الآن آفاقاً جديدة في ريادة الأعمال المتعلقة بالذكاء الاصطناعي.</p>
-            <p>تغيرت حياتنا عندما تم تشخيص زوجتي بعقد في الغدة الدرقية خلال فحص روتيني قبل عامين. هذا العام، كشفت الخزعة عن ورم خبيث، مما أدى إلى جراحة لإزالة الغدة الدرقية اليسرى. رغم نجاح الجراحة، إلا أنها كانت بداية فصل جديد في حياتنا، يشمل إدارة دقيقة للنظام الغذائي - خاصة مع الأطعمة مثل الأعشاب البحرية والخضروات الصليبية.</p>
-            <p>ألهمتني هذه التجربة الشخصية. في البداية فكرت في تطبيق لتتبع النظام الغذائي، لكنني أردت المساعدة في تخفيف تصلب الرقبة بعد الجراحة. بإلهام من حب زوجتي لألعاب المطابقة وشغفي بلعبة تتريس، بالإضافة إلى رؤية تطبيق يعتمد على AirPods لتصحيح وضعية الرقبة، اكتملت الفكرة!</p>
-            <p>سحر Neck Blocks يكمن في قدرته على تحويل التمارين الضرورية إلى متعة - 10 دقائق فقط يمكن أن تجعل يومك أفضل. بينما بدأ كأداة للتعافي بعد جراحة الغدة الدرقية، أصبح مفيداً لأي شخص يعاني من توتر الرقبة، خاصة موظفي المكاتب المعرضين لمشاكل العمود الفقري (مثلي).</p>
-            <p>بالبناء على مشروع كتل موجود، أضفت العديد من الميزات المبتكرة:</p>
-            <ul>
-                <li>دمج AirPods للتحكم بالحركة (الإمالة لأعلى للتدوير، ولأسفل للتسريع، مع حركات يسار-يمين بديهية)</li>
-                <li>وضع مطابقة فريد (يجمع أفضل ما في العالمين - مع خطط لرسومات موضوعية في التحديثات المستقبلية)</li>
-                <li>تجربة صوتية مخصصة - مثالية للاستخدام مع سماعات إلغاء الضوضاء، سواء في صمت أو مع موسيقى خلفية هادئة</li>
-                <li>المزيد من الميزات المثيرة قيد التطوير - ترقبوا!</li>
-                <li>الإعدادات في القائمة تدعم العديد من اللغات</li>
-            </ul>
-            <p>أتطلع إلى تطوير لعبة مغامرات غامرة باستخدام الصوت المكاني وتتبع حركة الرأس عبر AirPods. تخيلوا التنقل في عالم حيث تكمن الوحوش على يساركم والكنوز تناديكم من اليمين، باستخدام السمع وحركات الرأس فقط لتوجيهكم.</p>
-            <p>إنها طريقة جديدة تماماً للعب - بدون مدخلات بصرية، فقط الصوت والحركة. هل أثار هذا اهتمامكم؟ دعونا نتواصل ونستكشف هذه الإمكانيات معاً!</p>
-        </div>
-
-        <div class="changelog" dir="rtl">
-            <h2>سجل التغييرات</h2>
-            <div class="version">
-                <h3>الإصدار 0.0.1</h3>
-                <ul>
-                    <li>✨ إضافة التحكم بحركة الرأس عبر AirPods
-                        <ul>
-                            <li>الإمالة لأعلى لتدوير الكتل</li>
-                            <li>الإمالة لأسفل لتسريع السقوط</li>
-                            <li>حركات الرأس يميناً/يساراً للتحكم في حركة الكتل</li>
-                        </ul>
-                    </li>
-                    <li>✨ تنفيذ وضع مطابقة الثلاثية</li>
-                    <li>🔇 إيقاف المؤثرات الصوتية للعمليات للتركيز مع خاصية إلغاء الضوضاء أو الموسيقى الخلفية</li>
-                    <li>🎮 تنفيذ آليات اللعبة الأساسية</li>
-                    <li>🎮 الإعدادات في القائمة تدعم العديد من اللغات</li>
-                    <li>🎮 المزيد من الميزات المثيرة قيد التطوير - ترقبوا!</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- 希伯来语部分 -->
-    <div class="section hebrew" dir="rtl">
-        <h1>Neck Blocks-ברוכים הבאים ל</h1>
-        <p class="subtitle">!המסע שלכם לשחרור הצוואר מתחיל כאן</p>
-        
-        <p class="message">נתקלתם בבעיה? אנחנו כאן לעזור! שלחו לנו דוא"ל ונחזור אליכם בהקדם</p>
-        
-        <div class="contact">
-            <strong>:צרו קשר בכתובת</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">!תודה שאתם חלק מהמסע שלנו</p>
-
-        <div class="story">
-            <h2>מסע אישי</h2>
-            <p>עם רקע בחומרה חכמה ובינה מלאכותית בחברות טכנולוגיה מובילות, אני חוקר כעת אופקים חדשים ביזמות בתחום הבינה המלאכותית.</p>
-            <p>החיים קיבלו תפנית בלתי צפויה כאשר אשתי אובחנה עם קשר��ם בבלוטת ��תריס במהלך בדיקה שגרתית לפני שנתיים. השנה, ביופסיה חשפה גידול ממאיר, שהוביל לניתוח להסרת בלוטת התריס השמאלית. למרות שהניתוח היה מוצלח, הוא סימן את תחילתו של פרק חדש בחיינו, כולל ניהול תזונה קפדני - במיוחד עם מאכלים כמו אצות וירקות מצליבים.</p>
-            <p>החוויה האישית הזו הציתה רעיון. בהתחלה שקלתי אפליקציה למעקב תזונה (אם כי גיליונות אלקטרוניים הספיקו), רציתי לעזור עם נוקשות הצוואר שלאחר הניתוח. בהשראת אהבה של אשתי למשחקי התאמה והתשוקה שלי לטטריס, ובנוסף לראיית אפליקציה מבוססת AirPods לתנוחת צוואר ב-Product Hunt, הכל התחבר!</p>
-            <p>הקסם של Neck Blocks טמון ביכולתו להפוך תרגילים חיוניים לכיף - רק 10 דקות יכולות להפוך את כל היום שלכם לטוב יותר. בעוד שהתחיל ככלי להתאוששות מניתוח בלוטת התריס, הוא הפך לבעל ערך לכל מי שמתמודד עם מתח בצוואר, במיוחד עובדי משרד בסיכון לבעיות צוואריות (כמוני).</p>
-            <p>:בהתבסס על פרויקט בלוקים קיים, הוספתי מספר תכונות חדשניות</p>
-            <ul>
-                <li>שילוב AirPods שליטה בתנועה (הטיה למעלה לסיבוב, למטה להאצה, עם תנועות שמאל-ימין אינטואיטיביות)</li>
-                <li>מצב התאמה ייחודי (משלב את הטוב משני העולמות - עם תכניות לגרפיקה תמטית בעדכונים עתידיים)</li>
-                <li>חוויית שמע מותאמת אישית - מושלמת לשימוש עם אוזניות מבטלות רעשים, בן אם בשקט או עם מוזיקת רקע עדינה</li>
-                <li>!עוד תכונות מרגשות בפיתוח - הישארו מעודכנים</li>
-                <li>הגדרות בתפריט תומכות בהרבה שפות</li>
-            </ul>
-            <p>במבט קימה, אני נרגש לפתח משחק הרפתקאות מרתק המשתמש באודיו מרחבי ומעקב תנועות ראש באמצעות AirPods. דמיינו ניווט בעולם שבו מפלצות אורבות משמאלכם ואוצרות קוראים לכם מימ��ן, תוך שימוש רק בשמיעה ותנועות ראש להכוונה.</p>
-            <p>זו דרך חדשה לגמרי לשחק - ללא קלט חזותי, רק אודיו ותנועה. מסקרן אתכם? בואו נתחבר ונחקור את האפשרויות האלה יחד!</p>
-        </div>
-
-        <div class="changelog" dir="rtl">
-            <h2>יומן שינויים</h2>
-            <div class="version">
-                <h3>גרסה 0.0.1</h3>
-                <ul>
-                    <li>✨ הוספת שליטה בתנועות ראש באמצעות AirPods
-                        <ul>
-                            <li>הטיה למעלה לסיבוב בלוקים</li>
-                            <li>הטיה למטה להאצת נפילה</li>
-                            <li>תנועות ראש שמאלה/ימינה לתנועת בלוקים</li>
-                        </ul>
-                    </li>
-                    <li>✨ יישום מצב משחק התאמה-3</li>
-                    <li>🔇 השבתת אפקטים קוליים לחוויה ממוקדת יותר עם ביטול רעשים או מוזיקת רקע</li>
-                    <li>🎮 יישום מכניקת משחק בסיסית</li>
-                    <li>🎮 הגדרות בתפריט תומכות בהרבה שפות</li>
-                    <li>🎮 עוד תכונות מרגשות בפיתוח - שמורו על עדכון!</li>
-                </ul>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style>
@@ -1300,23 +1324,6 @@ h1 {
         line-height: 1.8;
     }
 
-    /* 阿拉伯语样式优化 - 优雅流畅 */
-    .arabic {
-        --heading-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
-        --body-font: "SF Arabic", "Adobe Arabic", Arial, sans-serif;
-        line-height: 1.8;
-    }
-
-    .arabic h1 {
-        font-family: var(--heading-font);
-        font-weight: 600;
-        letter-spacing: 0;
-    }
-
-    .arabic .story {
-        line-height: 1.9;
-    }
-
     /* 希伯来语样式优化 - 简约现代 */
     .hebrew {
         --heading-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
@@ -1437,238 +1444,75 @@ h1 {
         letter-spacing: 0.02em;
     }
 
-    /* 俄罗斯方块背景样式 */
-    .tetris-background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -1;
-        pointer-events: none;
-        overflow: hidden; /* 添加此行确保不会出现滚动条 */
+    /* 添加故事部分的摇动动画 */
+    .story {
+        animation: gentleFloat 6s ease-in-out infinite;
+        transform-origin: center center;
+        will-change: transform;
     }
 
-    .tetris-block {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background-color: #0066cc;
-        border: 1px solid rgba(0, 102, 204, 0.3);
-        box-shadow: 0 0 5px rgba(0, 102, 204, 0.2);
-        opacity: 0.1;
-        border-radius: 2px; /* 添加圆角使方块更美观 */
-        transition: opacity 0.3s ease;
-    }
-
-    /* 深色模式适配 */
-    @media (prefers-color-scheme: dark) {
-        .tetris-background {
-            background: rgba(0, 0, 0, 0.97);
-        }
-        
-        .tetris-block {
-            background-color: #4d94ff;
-            border-color: rgba(77, 148, 255, 0.5);
-            box-shadow: 0 0 8px rgba(77, 148, 255, 0.4);
-            opacity: 0.15;
-        }
-    }
-
-    /* 添加方块动画效果 */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 0.1; }
-    }
-
-    /* 深色模式下的动画 */
-    @media (prefers-color-scheme: dark) {
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.15; }
-        }
-    }
-
-    .changelog {
-        margin-top: 4rem;
-        padding: 2rem;
-        background: #f5f5f7;
-        border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    }
-
-    .changelog h2 {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        color: #1d1d1f;
-    }
-
-    .version {
-        margin-bottom: 2rem;
-    }
-
-    .version h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: #1d1d1f;
-    }
-
-    .version ul {
-        list-style: none;
-        padding-left: 0;
-    }
-
-    .version ul li {
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .version ul ul {
-        margin-top: 0.5rem;
-        margin-left: 1.5rem;
-        padding-left: 1rem;
-        border-left: 2px solid rgba(0,102,204,0.2);
-    }
-
-    .version ul ul li {
-        margin-bottom: 0.5rem;
-        font-size: 0.95em;
-        color: #666;
-    }
-
-    /* 深色模式适配 */
-    @media (prefers-color-scheme: dark) {
-        .changelog {
-            background: #1d1d1f;
-        }
-        
-        .changelog h2,
-        .version h3 {
-            color: #f5f5f7;
-        }
-        
-        .version ul ul li {
-            color: #999;
-        }
-        
-        .version ul ul {
-            border-left-color: rgba(0,102,204,0.4);
-        }
-    }
-
-    /* 在现有样式后添加以下内容 */
-
-    /* 液体边框效果 */
-    .story, .contact, .changelog {
-        position: relative;
-        background: transparent;
-        padding: 3rem;
-        border-radius: 24px;
-        overflow: hidden;
-    }
-
-    .story::before, .contact::before, .changelog::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, #0066cc, #00cc99, #0066cc);
-        background-size: 400% 400%;
-        z-index: -1;
-        animation: liquidBorder 8s ease infinite;
-        border-radius: 24px;
-    }
-
-    .story::after, .contact::after, .changelog::after {
-        content: '';
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        right: 2px;
-        bottom: 2px;
-        background: #f5f5f7;
-        border-radius: 22px;
-        z-index: -1;
-    }
-
-    @keyframes liquidBorder {
+    @keyframes gentleFloat {
         0% {
-            background-position: 0% 50%;
+            transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+            transform: translate(3px, 2px) rotate(0.3deg);
         }
         50% {
-            background-position: 100% 50%;
+            transform: translate(-2px, -2px) rotate(-0.3deg);
+        }
+        75% {
+            transform: translate(-3px, 1px) rotate(0.2deg);
         }
         100% {
-            background-position: 0% 50%;
+            transform: translate(0, 0) rotate(0deg);
         }
     }
 
-    /* 更新日志悬停效果 */
-    .version {
-        transition: all 0.3s ease;
-        padding: 1.5rem;
-        border-radius: 12px;
-        position: relative;
-        overflow: hidden;
+    /* 为不同语言版本添加错开的动画延迟，使动画更自然 */
+    .english .story {
+        animation-delay: 0s;
     }
 
-    .version::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, rgba(0,102,204,0.1), rgba(0,204,153,0.1));
-        opacity: 0;
-        transition: all 0.3s ease;
+    .chinese .story {
+        animation-delay: -1.5s;
     }
 
-    .version:hover {
-        transform: translateY(-4px);
+    /* 添加鼠标悬停时的交互效果 */
+    .story {
+        transition: transform 0.3s ease;
     }
 
-    .version:hover::before {
-        opacity: 1;
+    .story:hover {
+        animation-play-state: paused;
+        transform: scale(1.01) translateY(-2px);
     }
 
-    .version h3 {
-        position: relative;
-        z-index: 1;
-    }
-
-    .version ul {
-        position: relative;
-        z-index: 1;
-    }
-
-    /* 深色模式适配 */
-    @media (prefers-color-scheme: dark) {
-        .story::after, .contact::after, .changelog::after {
-            background: #1d1d1f;
-        }
-
-        .story::before, .contact::before, .changelog::before {
-            background: linear-gradient(45deg, #4d94ff, #00ffcc, #4d94ff);
-        }
-
-        .version::before {
-            background: linear-gradient(45deg, rgba(77,148,255,0.15), rgba(0,255,204,0.15));
-        }
-    }
-
-    /* 优化移动端显示 */
+    /* 优化移动端体验 */
     @media (max-width: 768px) {
-        .story, .contact, .changelog {
-            padding: 1.5rem;
+        @keyframes gentleFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(2px, 1px) rotate(0.2deg);
+            }
+            50% {
+                transform: translate(-1px, -1px) rotate(-0.2deg);
+            }
+            75% {
+                transform: translate(-2px, 1px) rotate(0.1deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
         }
-        
-        .version {
-            padding: 1rem;
+    }
+
+    /* 添加减少动画的媒体查询 */
+    @media (prefers-reduced-motion: reduce) {
+        .story {
+            animation: none;
         }
     }
 </style>

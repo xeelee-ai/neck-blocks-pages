@@ -1,1519 +1,819 @@
-<style>
-/* Thank you 心形动画样式 */
-.thank-you {
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.thank-you::after {
-    content: "❤️";
-    position: absolute;
-    opacity: 0;
-    font-size: 1.5em;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.5);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none;
-}
-
-.thank-you:hover {
-    transform: scale(1.02);
-}
-
-.thank-you:hover::after {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-    animation: heartBeat 1.5s infinite;
-}
-
-@keyframes heartBeat {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    14% {
-        transform: translate(-50%, -50%) scale(1.3);
-    }
-    28% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    42% {
-        transform: translate(-50%, -50%) scale(1.3);
-    }
-    70% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-@keyframes floatHeart {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -150%) scale(1.5);
-        opacity: 0;
-    }
-}
-
-/* RTL 语言的心形位置调整 */
-[dir="rtl"] .thank-you::after {
-    left: auto;
-    right: 50%;
-    transform: translate(50%, -50%) scale(0.5);
-}
-
-[dir="rtl"] .thank-you:hover::after {
-    transform: translate(50%, -50%) scale(1);
-}
-
-/* 导航容器样式 */
-.nav-container {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 1rem;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* 导航按钮容器样式 */
-.nav-buttons {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1rem;
-    height: 42px; /* 确保容器高度固定 */
-}
-
-/* 统一按钮和选择器样式 */
-.nav-button,
-.language-selector select {
-    height: 42px;
-    width: 140px;
-    padding: 0 1rem;
-    border: none;
-    border-radius: 12px;
-    background: #f5f5f7;
-    color: #1d1d1f;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* select 特殊样式 */
-.language-selector select {
-    padding-right: 2rem;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem center;
-    background-size: 0.65rem auto;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    text-align: center;
-    text-align-last: center;
-    padding-left: 1rem; /* 调整文字位置 */
-}
-
-/* 悬停效果 */
-.nav-button:hover,
-.language-selector select:hover {
-    transform: translateY(-2px);
-    background: #e8e8ed;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* 响应式布局 */
-@media (max-width: 768px) {
-    .nav-buttons {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .nav-button,
-    .language-selector select {
-        width: 100%;
-    }
-}
-
-/* 深色模式 */
-@media (prefers-color-scheme: dark) {
-    .nav-container {
-        background: rgba(0, 0, 0, 0.8);
-        border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .nav-button,
-    .language-selector select {
-        background: #1d1d1f;
-        color: #f5f5f7;
-    }
-
-    .nav-button:hover,
-    .language-selector select:hover {
-        background: #2d2d2f;
-    }
-
-    .language-selector select {
-        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23f5f5f7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    }
-}
-
-/* 多语言文本样式 */
-.nav-button .english-text,
-.nav-button .chinese-text,
-.nav-button .arabic-text,
-.nav-button .hebrew-text {
-    display: none;
-}
-
-/* 根据 body 的 lang 属性显示对应语言的文本 */
-body[lang="english"] .nav-button .english-text,
-body[lang="chinese"] .nav-button .chinese-text,
-body[lang="arabic"] .nav-button .arabic-text,
-body[lang="hebrew"] .nav-button .hebrew-text {
-    display: inline;
-}
-
-/* 默认显示英文 */
-body:not([lang]) .nav-button .english-text {
-    display: inline;
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-    .nav-button {
-        background: #1d1d1f;
-        color: #f5f5f7;
-    }
-
-    .nav-button:hover {
-        background: #2d2d2f;
-    }
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .nav-buttons {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}
-
-/* 导航容器样式 */
-.nav-container {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 1rem;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* 修改语言选择器样式 */
-.language-selector {
-    flex: 1;
-    max-width: 140px; /* 限制最大宽度 */
-    height: 42px; /* 确保与按钮高度一致 */
-    display: flex;
-    align-items: center; /* 垂直居中 */
-}
-
-.language-selector select {
-    width: 100%;
-    height: 42px; /* 确保与按钮高度一致 */
-    padding: 0.75rem 2rem 0.75rem 1.5rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 12px;
-    background-color: #f5f5f7;
-    color: #1d1d1f;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem top 50%;
-    background-size: 0.65rem auto;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-/* 修改导航按钮容器样式 */
-.nav-buttons {
-    flex: 2;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-button {
-    height: 42px; /* 确保所有按钮高度一致 */
-    min-width: 140px;
-}
-
-/* 响应式布局调整 */
-@media (max-width: 768px) {
-    .nav-container {
-        flex-direction: column;
-        padding: 1rem;
-        gap: 1rem;
-    }
-    
-    .language-selector {
-        max-width: 100%;
-        width: 100%;
-    }
-    
-    .nav-buttons {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .nav-button {
-        flex: 1;
-        margin: 0;
-    }
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-    .nav-container {
-        background: rgba(0, 0, 0, 0.8);
-        border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-}
-
-/* 按钮内部图标和文字的布局 */
-.nav-button .icon {
-    margin-right: 0.5rem;
-    flex-shrink: 0;
-}
-
-/* RTL 支持 */
-[dir="rtl"] .nav-button .icon {
-    margin-right: 0;
-    margin-left: 0.5rem;
-}
-
-.nav-button.language-button {
-    position: relative;
-}
-
-.language-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 0.5rem;
-    background: #f5f5f7;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    z-index: 1000;
-    min-width: 140px;
-}
-
-.language-menu.show {
-    display: block;
-}
-
-.menu-item {
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.menu-item:hover {
-    background: #e8e8ed;
-}
-
-.menu-item:first-child {
-    border-radius: 12px 12px 0 0;
-}
-
-.menu-item:last-child {
-    border-radius: 0 0 12px 12px;
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-    .language-menu {
-        background: #1d1d1f;
-    }
-    
-    .menu-item:hover {
-        background: #2d2d2f;
-    }
-}
-
-.lang-icon {
-    font-size: 1.2em;
-    flex-shrink: 0;
-}
-
-.lang-text {
-    flex-grow: 1;
-}
-
-/* 更新当前语言显示 */
-.language-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.current-language {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* 添加故事部分的摇动动画 */
-.story {
-    animation: gentleFloat 8s ease-in-out infinite;
-    transform-origin: center center;
-    will-change: transform;
-    transition: transform 0.3s ease;
-    position: relative;
-}
-
-@keyframes gentleFloat {
-    0% {
-        transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    20% {
-        transform: translate(5px, 3px) rotate(0.5deg) scale(1.002);
-    }
-    40% {
-        transform: translate(-4px, -3px) rotate(-0.5deg) scale(0.998);
-    }
-    60% {
-        transform: translate(-5px, 2px) rotate(-0.3deg) scale(1.001);
-    }
-    80% {
-        transform: translate(4px, -2px) rotate(0.4deg) scale(0.999);
-    }
-    100% {
-        transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-}
-
-/* 为不同语言版本添加错开的动画延迟和不同的动画周期 */
-.english .story {
-    animation: gentleFloat 8.5s ease-in-out infinite;
-    animation-delay: -2s;
-}
-
-.chinese .story {
-    animation: gentleFloat 7.5s ease-in-out infinite;
-    animation-delay: -1s;
-}
-
-/* 增强鼠标悬停效果 */
-.story:hover {
-    animation-play-state: paused;
-    transform: scale(1.015) translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* 添加阴影动画 */
-.story::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 24px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-}
-
-.story:hover::before {
-    opacity: 1;
-}
-
-/* 优化移动端体验 */
-@media (max-width: 768px) {
-    @keyframes gentleFloat {
-        0% {
-            transform: translate(0, 0) rotate(0deg) scale(1);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xeelee.ai - Redefining AI Boundaries</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
-        20% {
-            transform: translate(3px, 2px) rotate(0.3deg) scale(1.001);
-        }
-        40% {
-            transform: translate(-2px, -2px) rotate(-0.3deg) scale(0.999);
-        }
-        60% {
-            transform: translate(-3px, 1px) rotate(-0.2deg) scale(1.001);
-        }
-        80% {
-        100% {
-            transform: translate(0, 0) rotate(0deg);
-        }
-    }
-}
-
-/* 添加减少动画的媒体查询 */
-@media (prefers-reduced-motion: reduce) {
-    .story {
-        animation: none;
-    }
-}
-
-/* 修改俄罗斯方块背景样式 */
-.tetris-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999; /* 提升到最上层 */
-    pointer-events: none; /* 确保不影响下层元素的交互 */
-    overflow: hidden;
-}
-
-/* 更新方块样式 */
-.tetris-block {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #0066cc;
-    border: 1px solid rgba(0, 102, 204, 0.3);
-    box-shadow: 0 0 12px rgba(0, 102, 204, 0.4);
-    opacity: 0.2; /* 略微提高透明度 */
-    border-radius: 3px;
-    transition: all 0.3s ease;
-    pointer-events: none; /* 确保方块不影响交互 */
-    mix-blend-mode: screen; /* 添加混合模式使方块更好地融入界面 */
-}
-
-/* 深色模式下的方块样式 */
-@media (prefers-color-scheme: dark) {
-    .tetris-block {
-        background-color: #4d94ff;
-        border-color: rgba(77, 148, 255, 0.5);
-        box-shadow: 0 0 16px rgba(77, 148, 255, 0.6);
-        opacity: 0.25;
-        mix-blend-mode: screen;
-    }
-}
-
-/* 修改方块容器样式 */
-.tetris-background > div {
-    position: absolute;
-    z-index: 9999; /* 确保每个方块容器也在最上层 */
-    pointer-events: none;
-}
-</style>
-
-<script>
-// 修改 getBrowserLanguage 函数，移除阿拉伯语和希伯来语的映射
-function getBrowserLanguage() {
-    const browserLang = navigator.language || navigator.userLanguage;
-    const lang = browserLang.toLowerCase().split('-')[0];
-    
-    const languageMap = {
-        'en': 'english',
-        'zh': 'chinese'
-    };
-
-    return languageMap[lang] || 'english';
-}
-
-// 修改页面加载时的初始化逻辑
-document.addEventListener('DOMContentLoaded', function() {
-    // 首先检查 URL 中是否有语言参数
-    const urlParams = new URLSearchParams(window.location.search);
-    const langParam = urlParams.get('lang');
-    
-    // 如果 URL 中有语言参数，使用该参数
-    // 否则使用浏览器语言
-    const initialLang = langParam || getBrowserLanguage();
-    
-    // 设置初始语言
-    showSection(initialLang);
-    
-    // 更新当前语言显示
-    const currentLang = document.querySelector('.current-language');
-    switch(initialLang) {
-        case 'english':
-            currentLang.innerHTML = '<span class="lang-icon">🇺🇸</span>English';
-            break;
-        case 'chinese':
-            currentLang.innerHTML = '<span class="lang-icon">🇨🇳</span>中文';
-            break;
-    }
-    
-    // 设置 body 的 lang 属性
-    document.body.setAttribute('lang', initialLang);
-
-    // 点击页面其他地方关闭语言菜单
-    document.addEventListener('click', function(event) {
-        const menu = document.querySelector('.language-menu');
-        if (menu && menu.classList.contains('show')) {
-            toggleLanguageMenu();
-        }
-    });
-
-    // 阻止语言菜单内部点击事件冒泡
-    const languageMenu = document.querySelector('.language-menu');
-    if (languageMenu) {
-        languageMenu.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
-    }
-});
-
-// 修改 showSection 函数，移除阿拉伯语和希伯来语的处理
-function showSection(lang) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
-    
-    const selectedSection = document.querySelector(`.section.${lang}`);
-    if (selectedSection) {
-        selectedSection.style.display = 'block';
-    }
-    
-    // 更新当前语言显示
-    const currentLang = document.querySelector('.current-language');
-    switch(lang) {
-        case 'english':
-            currentLang.innerHTML = '<span class="lang-icon">🇺🇸</span>English';
-            break;
-        case 'chinese':
-            currentLang.innerHTML = '<span class="lang-icon">🇨🇳</span>中文';
-            break;
-    }
-    
-    // 设置 body 的 lang 属性来控制按钮文字
-    document.body.setAttribute('lang', lang);
-
-    // 更新 URL
-    const url = new URL(window.location);
-    url.searchParams.set('lang', lang);
-    window.history.pushState({}, '', url);
-}
-
-function changeLanguage(lang, event) {
-    if (event) {
-        event.stopPropagation(); // 阻止事件冒泡
-    }
-    showSection(lang);
-    toggleLanguageMenu();
-}
-
-// 俄罗斯方块背景动画
-document.addEventListener('DOMContentLoaded', function() {
-    const background = document.querySelector('.tetris-background');
-    const shapes = [
-        [[1, 1, 1, 1]], // I
-        [[1, 1], [1, 1]], // O
-        [[1, 1, 1], [0, 1, 0]], // T
-        [[1, 1, 1], [1, 0, 0]], // L
-        [[1, 1, 1], [0, 0, 1]], // J
-        [[1, 1, 0], [0, 1, 1]], // S
-        [[0, 1, 1], [1, 1, 0]]  // Z
-    ];
-
-    // 修改 createTetrisBlock 函数
-    function createTetrisBlock() {
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-        container.style.top = '-100px';
         
-        // 添加摇摆动画的初始值
-        const swayAmplitude = 50; // 增大摇摆幅度
-        const swaySpeed = 2 + Math.random(); // 摇摆速度
-        const startTime = Date.now();
-        let initialX = parseFloat(container.style.left);
-
-        shape.forEach((row, i) => {
-            row.forEach((cell, j) => {
-                if (cell) {
-                    const block = document.createElement('div');
-                    block.className = 'tetris-block';
-                    block.style.left = (j * 20) + 'px';
-                    block.style.top = (i * 20) + 'px';
-                    container.appendChild(block);
-                }
-            });
-        });
-
-        background.appendChild(container);
-
-        let posY = -100;
-        const fallSpeed = 1.5 + Math.random(); // 略微加快下落速度
-        const rotationSpeed = 0.5 + Math.random() * 0.5; // 更自然的旋转速度
-
-        function fall() {
-            const time = (Date.now() - startTime) / 1000;
-            posY += fallSpeed;
-            
-            // 使用正弦函数创建左右摇摆效果
-            const sway = Math.sin(time * swaySpeed) * swayAmplitude;
-            const newX = initialX + sway;
-            
-            // 添加上下起伏的效果
-            const bounce = Math.sin(time * swaySpeed * 2) * 10;
-            
-            container.style.top = (posY + bounce) + 'px';
-            container.style.left = newX + 'px';
-            
-            // 添加自然的旋转效果
-            const rotation = Math.sin(time * swaySpeed) * 15; // 减小旋转角度使其更自然
-            container.style.transform = `rotate(${rotation}deg)`;
-
-            if (posY < window.innerHeight + 100) {
-                requestAnimationFrame(fall);
-            } else {
-                container.remove();
-            }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.5;
+            overflow-x: hidden;
         }
-
-        fall();
-    }
-
-    // 初始创建更多方块
-    for (let i = 0; i < 8; i++) {
-        setTimeout(createTetrisBlock, i * 300);
-    }
-
-    // 缩短创建新方块的间隔
-    setInterval(createTetrisBlock, 1500);
-
-    // 窗口大小改变时重新计算
-    window.addEventListener('resize', () => {
-        background.innerHTML = '';
-        for (let i = 0; i < 5; i++) {
-            setTimeout(createTetrisBlock, i * 500);
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-    });
-});
-
-// 修改 scrollToStory 函数
-function scrollToStory() {
-    // 取当前语言
-    const currentLang = document.body.getAttribute('lang') || 'english';
-    const storySection = document.querySelector(`.${currentLang} .story`);
-    if (storySection) {
-        storySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-
-// 修改 scrollToChangelog 函数
-function scrollToChangelog() {
-    // 获取当前语言
-    const currentLang = document.body.getAttribute('lang') || 'english';
-    const changelogSection = document.querySelector(`.${currentLang} .changelog`);
-    if (changelogSection) {
-        changelogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-
-function toggleLanguageMenu(event) {
-    if (event) {
-        event.stopPropagation();
-    }
-    const menu = document.querySelector('.language-menu');
-    menu.classList.toggle('show');
-}
-</script>
-
-<!-- 在 <div class="container"> 之前添加背景容器 -->
-<div class="tetris-background"></div>
-
-<!-- 修改 tetris-background 相关样式 -->
-<style>
-/* 俄罗斯方块背景样式 */
-.tetris-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999; /* 提升到最上层 */
-    pointer-events: none; /* 确保不影响下层元素的交互 */
-    overflow: hidden;
-}
-
-/* 更新方块样式 */
-.tetris-block {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #0066cc;
-    border: 1px solid rgba(0, 102, 204, 0.3);
-    box-shadow: 0 0 12px rgba(0, 102, 204, 0.4);
-    opacity: 0.2; /* 略微提高透明度 */
-    border-radius: 3px;
-    transition: all 0.3s ease;
-    pointer-events: none; /* 确保方块不影响交互 */
-    mix-blend-mode: screen; /* 添加混合模式使方块更好地融入界面 */
-}
-
-/* 深色模式下的方块样式 */
-@media (prefers-color-scheme: dark) {
-    .tetris-block {
-        background-color: #4d94ff;
-        border-color: rgba(77, 148, 255, 0.5);
-        box-shadow: 0 0 16px rgba(77, 148, 255, 0.6);
-        opacity: 0.25;
-        mix-blend-mode: screen;
-    }
-}
-
-/* 修改方块容器样式 */
-.tetris-background > div {
-    position: absolute;
-    z-index: 9999; /* 确保每个方块容器也在最上层 */
-    pointer-events: none;
-}
-
-/* 添加方块出现时的动画 */
-@keyframes blockAppear {
-    from {
-        transform: scale(0) rotate(180deg);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1) rotate(0deg);
-        opacity: 0.15;
-    }
-}
-
-.tetris-block {
-    animation: blockAppear 0.5s ease-out;
-}
-
-/* 深色模式下的动画终态透明度调整 */
-@media (prefers-color-scheme: dark) {
-    @keyframes blockAppear {
-        from {
-            transform: scale(0) rotate(180deg);
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        /* 导航栏 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 60px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        nav.scrolled {
+            padding: 20px 60px;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #00E4FF 0%, #5D6CFF 50%, #FF8FE2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+        
+        .logo::after {
+            content: "";
+            position: absolute;
+            height: 6px;
+            width: 6px;
+            background: #00E4FF;
+            border-radius: 50%;
+            bottom: 5px;
+            right: -8px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 50px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(90deg, #00E4FF, #8F00FF);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #00E4FF;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #15151e 0%, #000000 100%);
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #00E4FF;
+            margin-bottom: 20px;
             opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
         }
-        to {
-            transform: scale(1) rotate(0deg);
-            opacity: 0.2;
+        
+        .hero h1 {
+            font-size: 80px;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            background: linear-gradient(180deg, #FFFFFF 0%, #BEBEBE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.4s;
         }
-    }
-}
-
-/* 添加方块动画效果 */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 0.1; }
-}
-
-/* 深色模式下的动画 */
-@media (prefers-color-scheme: dark) {
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 0.15; }
-    }
-}
-</style>
-
-<div class="container">
-    <div class="nav-container">
-        <div class="nav-buttons">
-            <button onclick="scrollToStory()" class="nav-button">
-                <span class="icon">📖</span>
-                <span class="english-text">Developer Story</span>
-                <span class="chinese-text">开发者故事</span>
-                <span class="arabic-text">قصة المطور</span>
-                <span class="hebrew-text">סיפור המפתח</span>
-            </button>
-            <button onclick="scrollToChangelog()" class="nav-button">
-                <span class="icon">📝</span>
-                <span class="english-text">Changelog</span>
-                <span class="chinese-text">更新日志</span>
-                <span class="arabic-text">سجل التغييرات</span>
-                <span class="hebrew-text">יומן שינויים</span>
-            </button>
-            <button onclick="toggleLanguageMenu(event)" class="nav-button language-button">
-                <span class="icon">🌐</span>
-                <span class="current-language">English</span>
-                <div class="language-menu">
-                    <div class="menu-item" onclick="changeLanguage('english', event)">
-                        <span class="lang-icon">🇺🇸</span>
-                        <span class="lang-text">English</span>
-                    </div>
-                    <div class="menu-item" onclick="changeLanguage('chinese', event)">
-                        <span class="lang-icon">🇨🇳</span>
-                        <span class="lang-text">中文</span>
-                    </div>
-                </div>
-            </button>
-        </div>
-    </div>
-
-    <!-- 增加 qiqi.mp4 -->
-    <!-- <video src="qiqi.mp4" style="width: 65%; height: 65%;" autoplay loop muted controls></video> -->
-
-    <!-- 中文部分 -->
-    <div class="section chinese">
-        <h1>感谢您选择我们的 Neck Blocks 游戏！</h1>
-        <p class="subtitle">快用它来解放您的脖子吧！</p>
         
-        <p class="message">如果您在使用我们的产品时遇到任何问题，请发送邮件与我们联系，我们将竭诚为您服务！</p>
-        
-        <div class="contact">
-            <strong>邮箱地址：</strong>
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">再次感谢！</p>
-
-
-
-        <div class="story">
-            <h2>开发者故事</h2>
-            <p>我曾在大型公司从事智能硬件和人工智能领域的工作，现在正在涉足与人工智能相关的创业。</p>
-            <p>两年前，在一次例行体检中，我妻子被诊断出患有甲状腺结节。年，经过活检，我们发现这是一个恶性肿瘤，于是她接受了手术，切除了左侧甲状腺。手术很顺利，但这是一个相当漫长的过程。今后，她需要仔细注意饮食——例如，限制海带和十字花科蔬菜等食物。</p>
-            <p>这启发我创建了一个应用程序（最早是饮食控制的APP，但我发现在线表格就能解决该问题），来帮助她恢复僵硬的脖子，想到她喜欢消消乐，我喜欢俄罗斯方块，然后看到PH上有个通过AirPods来提醒脖子弯曲时间的APP，灵光一闪，啊哈！</p>
-            <p>把脖子的锻炼游戏化是这个应用的价值，运动十分钟，轻松一整天。现在不仅仅是甲状腺术后患者，很多办公人群存在颈部肌肉紧张，可以有效缓解颈部肌肉紧张，预防颈椎病（比如我）。</p>
-            <p>于是找了一个方块项目进行修改，增加了以下功能：</p>
-            <ul>
-                <li>支持通过AirPods来检测头部动作来进行游戏（抬头为旋转方块，低头加速方块下落，左右就不用说了）</li>
-                <li>把一些操作的音效关闭了，因为我喜欢耳机就开减噪，不播放东西，或者播放柔和一些轻音乐或者瑜伽音频</li>
-                <li>更多功能还在开发中，敬请期待</li>
-            </ul>
-            <p>这也启发我后续会去做一款空间音实现声音或者空间的感知定位结合AirPods头部控制来实现的冒险游戏，比如左边有怪物，右边有宝藏，您需要通过耳朵和头部来判断方向，通过声音的多普勒效应来判断距离，然后躲避怪物，拿到宝藏</p>
-            <p>简而言之，就是一款不使用眼睛，只使用耳朵和头部来玩的游戏。如果您对这个概念感兴趣，请联系我，我们可以一起讨论和探索！</p>
-        </div>
-    </div>
-
-    <!-- 英语部分 -->
-    <div class="section english">
-        <h1>Welcome to Neck Blocks!</h1>
-        <p class="subtitle">Your path to neck freedom starts here!</p>
-        
-        <p class="message">Having trouble? We're here to help! Drop us an email and we'll get back to you right away.</p>
-        
-        <div class="contact">
-            <strong>Contact us at:</strong> 
-            <a href="mailto:xunfeng1980@hotmail.com">xunfeng1980@hotmail.com</a>
-        </div>
-        
-        <p class="thank-you">Thanks for being part of our journey!</p>
-
-        <div class="story">
-            <h2>A Personal Journey</h2>
-            <p>With a background in smart hardware and AI at major tech companies, I'm now exploring new frontiers in AI entrepreneurship.</p>
-            <p>Life took an unexpected turn when my wife was diagnosed with thyroid nodules during a routine check-up two years ago. This year, a biopsy revealed a malignant tumor, leading to surgery to remove her left thyroid. While the surgery was successful, it marked the beginning of a new chapter in our lives, including careful dietary management - particularly with foods like seaweed and cruciferous vegetables.</p>
-            <p>This personal experience sparked an idea. Initially considering a diet tracking app (though spreadsheets proved sufficient), I wanted to help with post-surgery neck stiffness. Inspired by my wife's love for match-3 games and my passion for Tetris, plus seeing an AirPods-based neck posture app on Product Hunt, everything clicked!</p>
-            <p>The magic of Neck Blocks lies in its ability to transform essential exercises into fun - just 10 minutes can make your whole day better. While it started as a tool for post-thyroid surgery recovery, it's become valuable for anyone dealing with neck tension, especially office workers at risk of cervical issues (like myself).</p>
-            <p>Building on an existing blocks project, I've added several innovative features:</p>
-            <ul>
-                <li>AirPods integration for motion control (tilt up to rotate, down to speed up, with intuitive left-right movements)</li>
-                <li>Disabled operation sound effects</li>
-                <li>More exciting features in development - stay tuned!</li>
-            </ul>
-            <p>Looking ahead, I'm excited about developing an <strong>immersive adventure game</strong> using <strong>spatial audio</strong> and <strong>AirPods head tracking</strong>. Imagine navigating through a world where monsters lurk to your left and treasures beckon from the right, using just your <strong>hearing and head movements</strong> to guide you.</p>
-            <p>It's a <strong>whole new way to game</strong> - no visual input, just audio and motion. Intrigued? Let's connect and explore these possibilities together!</p>
-        </div>
-    </div>
-
-</div>
-
-<style>
-/* 重置默认样式 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background-color: #ffffff;
-    color: #1d1d1f;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.container {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 2rem;
-    animation: fadeIn 0.8s ease-out;
-}
-
-/* 语言选择器样式 */
-.language-selector {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 1rem 0;
-    margin-bottom: 3rem;
-    text-align: right;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.language-selector select {
-    padding: 0.75rem 2rem 0.75rem 1.5rem;
-    min-width: 140px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 12px;
-    background-color: #f5f5f7;
-    color: #1d1d1f;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem top 50%;
-    background-size: 0.65rem auto;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.language-selector select:hover {
-    transform: translateY(-2px);
-    background-color: #e8e8ed;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-    .language-selector select {
-        background-color: #1d1d1f;
-        color: #f5f5f7;
-        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23f5f5f7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    }
-
-    .language-selector select:hover {
-        background-color: #2d2d2f;
-    }
-}
-
-/* 章节样式 */
-.section {
-    margin: 4rem 0;
-    opacity: 0;
-    animation: slideUp 0.8s ease-out forwards;
-}
-
-h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #1d1d1f;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-}
-
-.subtitle {
-    font-size: 1.5rem;
-    color: #86868b;
-    margin-bottom: 2.5rem;
-    font-weight: 400;
-}
-
-.message {
-    font-size: 1.125rem;
-    color: #1d1d1f;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
-
-.contact {
-    background: #f5f5f7;
-    padding: 2.5rem;
-    border-radius: 18px;
-    margin: 2rem 0;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-}
-
-.contact:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-.contact strong {
-    display: block;
-    font-size: 1.1rem;
-    color: #1d1d1f;
-    margin-bottom: 0.25rem;
-}
-
-.contact a {
-    display: inline-block;
-    color: #0066cc;
-    text-decoration: none;
-    font-size: 1.25rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    background: rgba(0,102,204,0.1);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.contact a:hover {
-    color: #0044aa;
-    background: rgba(0,102,204,0.15);
-    transform: translateY(-1px);
-}
-
-.thank-you {
-    font-size: 1.5rem;
-    color: #1d1d1f;
-    margin: 3rem 0;
-    font-weight: 600;
-    text-align: center;
-    padding: 2rem;
-    background: linear-gradient(to right, rgba(0,102,204,0.1), rgba(0,102,204,0.05));
-    border-radius: 16px;
-    transform: scale(1);
-    transition: all 0.3s ease;
-}
-
-.thank-you:hover {
-    transform: scale(1.02);
-    background: linear-gradient(to right, rgba(0,102,204,0.15), rgba(0,102,204,0.1));
-}
-
-.divider {
-    border: none;
-    height: 1px;
-    background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 50%, transparent);
-    margin: 4rem 0;
-}
-
-/* 故事部分样式 */
-.story {
-    background: #f5f5f7;
-    padding: 3rem;
-    border-radius: 24px;
-    margin: 3rem 0;
-    transition: all 0.3s ease;
-}
-
-.story:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-
-.story h2 {
-    font-size: 2rem;
-    color: #1d1d1f;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-}
-
-.story p {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: #1d1d1f;
-    margin-bottom: 1.5rem;
-}
-
-.story ul {
-    margin: 1.5rem 0;
-    padding-left: 1.5rem;
-}
-
-.story li {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: #1d1d1f;
-    margin-bottom: 1rem;
-    position: relative;
-}
-
-.story li::before {
-    content: "•";
-    color: #0066cc;
-    position: absolute;
-    left: -1.5rem;
-}
-
-/* RTL 语言支 */
-[dir="rtl"] {
-    text-align: right;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro AR", "SF Pro Gulf", "SF Arabic", Arial, sans-serif;
-}
-
-[dir="rtl"] .story li::before {
-    right: -1.5rem;
-    left: auto;
-}
-
-/* 动画 */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 响应式设计 */
-@media (max-width: 1024px) {
-    .container {
-        padding: 1.5rem;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    .story {
-        padding: 2rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-
-    .subtitle {
-        font-size: 1.25rem;
-    }
-
-    .story {
-        padding: 1.5rem;
-    }
-
-    .story h2 {
-        font-size: 1.75rem;
-    }
-}
-
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #000000;
-        color: #f5f5f7;
-    }
-
-    .language-selector {
-        background: rgba(0, 0, 0, 0.8);
-    }
-
-    .language-selector select {
-        background-color: #1d1d1f;
-        color: #f5f5f7;
-    }
-
-    h1, .story h2 {
-        color: #f5f5f7;
-    }
-
-    .contact, .story {
-        background: #1d1d1f;
-    }
-
-    .message, .story p, .story li {
-        color: #f5f5f7;
-    }
-
-    .divider {
-        background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 50%, transparent);
-    }
-
-    .contact {
-        background: #1d1d1f;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-    }
-
-    .contact:hover {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-
-    .contact strong {
-        color: #f5f5f7;
-    }
-
-    .contact a {
-        background: rgba(0,102,204,0.2);
-    }
-
-    .contact a:hover {
-        background: rgba(0,102,204,0.3);
-    }
-
-    .thank-you {
-        color: #f5f5f7;
-        background: linear-gradient(to right, rgba(0,102,204,0.2), rgba(0,102,204,0.1));
-    }
-
-    .thank-you:hover {
-        background: linear-gradient(to right, rgba(0,102,204,0.25), rgba(0,102,204,0.15));
-    }
-}
-
-    /* 英语样式优化 - 简洁现代 */
-    .english {
-        --heading-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-        --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    }
-
-    .english h1 {
-        font-family: var(--heading-font);
-        letter-spacing: -0.02em;
-    }
-
-    /* 中文样式化 - 优雅大气 */
-    .chinese {
-        --heading-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
-        --body-font: "PingFang SC", "Microsoft YaHei", "SF Pro SC", "Helvetica Neue", Arial, sans-serif;
-        letter-spacing: 0.05em;
-    }
-
-    .chinese h1 {
-        font-family: var(--heading-font);
-        font-weight: 600;
-        letter-spacing: 0.1em;
-    }
-
-    .chinese .story {
-        letter-spacing: 0.05em;
-        line-height: 1.8;
-    }
-
-    /* 希伯来语样式优化 - 简约现代 */
-    .hebrew {
-        --heading-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
-        --body-font: "SF Hebrew", "Adobe Hebrew", Arial, sans-serif;
-        line-height: 1.7;
-    }
-
-    .hebrew h1 {
-        font-family: var(--heading-font);
-        font-weight: 600;
-        letter-spacing: 0;
-    }
-
-    /* 为每种语言应用基础字体设置 */
-    .section {
-        font-family: var(--body-font);
-    }
-
-    .section h1,
-    .section h2 {
-        font-family: var(--heading-font);
-    }
-
-    /* 深色模式下的文化适配 */
-    @media (prefers-color-scheme: dark) {
-        .arabic .story,
-        .hebrew .story {
-            background: rgba(29, 29, 31, 0.9);
+        .hero h1 span {
+            background: linear-gradient(135deg, #00E4FF 0%, #5D6CFF 50%, #FF8FE2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-    }
-
-    /* RTL 语言的特殊处理 */
-    [dir="rtl"] .story li::before {
-        right: -1.5rem;
-        left: auto;
-    }
-
-    [dir="rtl"] .contact {
-        text-align: right;
-    }
-
-    /* 响应式调整 */
-    @media (max-width: 768px) {
-        .chinese h1 {
-            letter-spacing: 0.05em;
+        
+        .hero p {
+            font-size: 22px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.6s;
         }
-
-        .arabic,
-        .hebrew {
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.8s;
+        }
+        
+        .hero-button {
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .primary-button {
+            background: linear-gradient(135deg, #00E4FF 0%, #5D6CFF 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 228, 255, 0.3);
+        }
+        
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 228, 255, 0.4);
+        }
+        
+        .secondary-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .secondary-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .button-icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* 视差球体 */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            z-index: 1;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at center, rgba(0, 228, 255, 0.8) 0%, rgba(0, 228, 255, 0) 70%);
+            top: -100px;
+            right: -100px;
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at center, rgba(93, 108, 255, 0.8) 0%, rgba(93, 108, 255, 0) 70%);
+            bottom: -50px;
+            left: -50px;
+            animation: float 18s ease-in-out infinite 1s;
+        }
+        
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at center, rgba(255, 143, 226, 0.8) 0%, rgba(255, 143, 226, 0) 70%);
+            top: 40%;
+            left: 25%;
+            animation: float 20s ease-in-out infinite 2s;
+        }
+        
+        /* 愿景部分 */
+        .vision {
+            padding: 150px 60px;
+            position: relative;
+            background-color: #080810;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 100px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #00E4FF;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .section-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .vision h2 {
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #BEBEBE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease 0.2s;
+        }
+        
+        .vision h2.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-description {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease 0.4s;
+        }
+        
+        .section-description.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .vision-content {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .vision-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        
+        .vision-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .vision-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .vision-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #00E4FF, #5D6CFF);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .vision-item:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .vision-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 30px;
+            color: #ffffff;
+            background: rgba(0, 228, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .vision-item:nth-child(2) .vision-icon {
+            background: rgba(93, 108, 255, 0.1);
+        }
+        
+        .vision-item:nth-child(3) .vision-icon {
+            background: rgba(255, 143, 226, 0.1);
+        }
+        
+        .vision-item:hover .vision-icon {
+            transform: scale(1.1);
+        }
+        
+        .vision-item h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .vision-item:nth-child(1) h3 {
+            color: #00E4FF;
+        }
+        
+        .vision-item:nth-child(2) h3 {
+            color: #5D6CFF;
+        }
+        
+        .vision-item:nth-child(3) h3 {
+            color: #FF8FE2;
+        }
+        
+        .vision-item p {
+            font-size: 17px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+        
+        .read-more {
+            font-size: 15px;
+            font-weight: 500;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .vision-item:nth-child(1) .read-more:hover {
+            color: #00E4FF;
+        }
+        
+        .vision-item:nth-child(2) .read-more:hover {
+            color: #5D6CFF;
+        }
+        
+        .vision-item:nth-child(3) .read-more:hover {
+            color: #FF8FE2;
+        }
+        
+        .arrow-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .read-more:hover .arrow-icon {
+            transform: translateX(5px);
+        }
+        
+        /* 背景网格 */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
+                radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        /* 底部 */
+        footer {
+            padding: 80px 60px 40px;
+            background-color: #000000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .footer-info {
+            max-width: 400px;
+        }
+        
+        .footer-logo {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #00E4FF 0%, #5D6CFF 50%, #FF8FE2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .footer-logo::after {
+            content: "";
+            position: absolute;
+            height: 6px;
+            width: 6px;
+            background: #00E4FF;
+            border-radius: 50%;
+            bottom: 8px;
+            right: -8px;
+        }
+        
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
             line-height: 1.6;
         }
-    }
-
-    /* 动画优化 */
-    .section {
-        --animation-duration: 0.8s;
-        --animation-timing: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .english,
-    .chinese {
-        animation-duration: var(--animation-duration);
-        animation-timing-function: var(--animation-timing);
-    }
-
-    .arabic,
-    .hebrew {
-        animation-duration: calc(var(--animation-duration) * 1.2);
-    }
-
-    /* 交互效果优化 */
-    .section {
-        transition: opacity 0.3s ease;
-    }
-
-    .section:hover .thank-you {
-        transform: scale(1.02);
-        transition: transform 0.3s var(--animation-timing);
-    }
-
-    /* 打印样式优化 */
-    @media print {
-        .section {
-            animation: none;
-            opacity: 1;
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
         }
-
-        .story {
-            break-inside: avoid;
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
-    }
-
-    /* 世界语样式优化 */
-    .esperanto {
-        --heading-font: "Noto Sans", "Ubuntu", "DejaVu Sans", Arial, sans-serif;
-        --body-font: "Noto Sans", "Ubuntu", "DejaVu Sans", Arial, sans-serif;
-        line-height: 1.6;
-    }
-
-    .esperanto h1 {
-        font-weight: 700;
-        letter-spacing: 0.01em;
-    }
-
-    .esperanto .story {
-        line-height: 1.7;
-    }
-
-    /* 逻辑语样式优化 */
-    .lojban {
-        --heading-font: "Noto Sans", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
-        --body-font: "Noto Sans", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
-        line-height: 1.5;
-    }
-
-    .lojban h1 {
-        font-weight: 600;
-        letter-spacing: 0.02em;
-    }
-
-    /* 添加故事部分的摇动动画 */
-    .story {
-        animation: gentleFloat 6s ease-in-out infinite;
-        transform-origin: center center;
-        will-change: transform;
-    }
-
-    @keyframes gentleFloat {
-        0% {
-            transform: translate(0, 0) rotate(0deg);
+        
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
         }
-        25% {
-            transform: translate(3px, 2px) rotate(0.3deg);
+        
+        .social-icon {
+            width: 18px;
+            height: 18px;
+            color: #ffffff;
         }
-        50% {
-            transform: translate(-2px, -2px) rotate(-0.3deg);
+        
+        .footer-links {
+            display: flex;
+            gap: 80px;
         }
-        75% {
-            transform: translate(-3px, 1px) rotate(0.2deg);
+        
+        .footer-column h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #ffffff;
         }
-        100% {
-            transform: translate(0, 0) rotate(0deg);
+        
+        .footer-column ul {
+            list-style: none;
         }
-    }
-
-    /* 为不同语言版本添加错开的动画延迟，使动画更自然 */
-    .english .story {
-        animation-delay: 0s;
-    }
-
-    .chinese .story {
-        animation-delay: -1.5s;
-    }
-
-    /* 添加鼠标悬停时的交互效果 */
-    .story {
-        transition: transform 0.3s ease;
-    }
-
-    .story:hover {
-        animation-play-state: paused;
-        transform: scale(1.01) translateY(-2px);
-    }
-
-    /* 优化移动端体验 */
-    @media (max-width: 768px) {
-        @keyframes gentleFloat {
+        
+        .footer-column li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: #00E4FF;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 30px auto 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+        
+        .footer-nav {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .footer-nav a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-nav a:hover {
+            color: #ffffff;
+        }
+        
+        /* 动画 */
+        @keyframes float {
             0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(2px, 1px) rotate(0.2deg);
+                transform: translate(0, 0);
             }
             50% {
-                transform: translate(-1px, -1px) rotate(-0.2deg);
-            }
-            75% {
-                transform: translate(-2px, 1px) rotate(0.1deg);
+                transform: translate(20px, 20px);
             }
             100% {
-                transform: translate(0, 0) rotate(0deg);
+                transform: translate(0, 0);
             }
         }
-    }
-
-    /* 添加减少动画的媒体查询 */
-    @media (prefers-reduced-motion: reduce) {
-        .story {
-            animation: none;
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-    }
-</style>
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .vision-content {
+                flex-direction: column;
+                max-width: 600px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 50px;
+            }
+            
+            .footer-info {
+                max-width: 100%;
+            }
+            
+            .footer-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 48px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .hero-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .vision {
+                padding: 100px 20px;
+            }
+            
+            .vision h2 {
+                font-size: 40px;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 40px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .footer-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="logo">Xeelee</div>
+        <div class="nav-links">
+            <a href="#vision">Vision</a>
+            <a href="#products">Products</a>
+            <a href="#technology">Technology</a>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        
+        <div class="hero-content">
+            <div class="hero-subtitle">Welcome to the future of AI</div>
+            <h1>Redefining <span>Intelligence</span> for a New Era</h1>
+            <p>We're pushing the boundaries of artificial intelligence to create technology that truly understands human needs, empowering a world where intelligent systems enhance every aspect of our lives.</p>
+            
+            <div class="hero-buttons">
+                <a href="#vision" class="hero-button primary-button">
+                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                    </svg>
+                    Discover Our Vision
+                </a>
+                <a href="#contact" class="hero-button secondary-button">
+                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 愿景部分 -->
+    <section class="vision" id="vision">
+        <div class="grid-bg"></div>
+        
+        <div class="section-header">
+            <div class="section-subtitle">Our Vision</div>
+            <h2>Creating Intelligence That Understands</h2>
+            <p class="section-description">At Xeelee.ai, we're dedicated to developing AI systems that transcend traditional boundaries, creating technology that truly understands and adapts to human needs.</p>
+        </div>
+        
+        <div class="vision-content">
+            <div class="vision-item" style="transition-delay: 0.2s;">
+                <svg class="vision-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <h3>Breakthrough Innovation</h3>
+                <p>We're constantly pushing the boundaries of what's possible in AI, developing revolutionary algorithms and architectures that create entirely new capabilities and experiences.</p>
+                <a href="#" class="read-more">
+                    Learn more
+                    <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="vision-item" style="transition-delay: 0.4s;">
+                <svg class="vision-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h3>Human-Centered Intelligence</h3>
+                <p>We believe AI should amplify human potential rather than replace it. Our systems are designed to understand context, emotion, and intent, creating more natural and intuitive interactions.</p>
+                <a href="#" class="read-more">
+                    Learn more
+                    <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="vision-item" style="transition-delay: 0.6s;">
+                <svg class="vision-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h.5A2.5 2.5 0 0020 5.5v-1.65M12 12a2 2 0 100-4 2 2 0 000 4zm8-8a2 2 0 100-4 2 2 0 000 4zM4 4a2 2 0 100-4 2 2 0 000 4z" />
+                </svg>
+                <h3>Universal Access</h3>
+                <p>We're committed to making advanced AI accessible to everyone. Our technologies are designed to be intuitive, adaptable, and available across platforms, democratizing the benefits of artificial intelligence.</p>
+                <a href="#" class="read-more">
+                    Learn more
+                    <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
